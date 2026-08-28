@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student to Future Leader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#070b14;--surface:rgba(255,255,255,0.06);--surface-hover:rgba(255,255,255,0.1);
+--border:rgba(255,255,255,0.08);--border-glow:rgba(100,180,255,0.15);
+--text:#f0f4ff;--text-muted:rgba(240,244,255,0.55);--text-dim:rgba(240,244,255,0.3);
+--blue:#3a82ff;--cyan:#22d3ee;--gold:#f5a623;--emerald:#34d399;--rose:#f97316;
+--aurora-1:rgba(59,130,246,0.45);--aurora-2:rgba(34,211,238,0.35);
+--aurora-3:rgba(168,85,247,0.3);--aurora-4:rgba(52,211,153,0.25);
+}
+html,body{width:100%;height:100%;overflow:hidden;font-family:"Inter",sans-serif;background:var(--bg);color:var(--text)}
+h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
+
+/* ===== AURORA BACKGROUND ===== */
+.aurora-bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--bg)}
+.aurora-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.6;will-change:transform}
+.aurora-blob:nth-child(1){width:60vw;height:60vw;top:-15%;left:-10%;background:radial-gradient(circle,var(--aurora-1),transparent 70%);animation:drift1 18s ease-in-out infinite alternate}
+.aurora-blob:nth-child(2){width:50vw;height:50vw;bottom:-20%;right:-10%;background:radial-gradient(circle,var(--aurora-2),transparent 70%);animation:drift2 22s ease-in-out infinite alternate}
+.aurora-blob:nth-child(3){width:45vw;height:45vw;top:30%;left:40%;background:radial-gradient(circle,var(--aurora-3),transparent 70%);animation:drift3 25s ease-in-out infinite alternate}
+.aurora-blob:nth-child(4){width:40vw;height:40vw;top:-10%;right:20%;background:radial-gradient(circle,var(--aurora-4),transparent 70%);animation:drift4 20s ease-in-out infinite alternate}
+@keyframes drift1{0%{transform:translate(0,0) scale(1)}50%{transform:translate(8%,12%) scale(1.08)}100%{transform:translate(-5%,6%) scale(.95)}}
+@keyframes drift2{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-10%,-8%) scale(1.1)}100%{transform:translate(6%,-4%) scale(.92)}}
+@keyframes drift3{0%{transform:translate(0,0) scale(1)}50%{transform:translate(12%,-6%) scale(1.05)}100%{transform:translate(-8%,10%) scale(.97)}}
+@keyframes drift4{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-6%,8%) scale(1.12)}100%{transform:translate(10%,-6%) scale(.9)}}
+
+/* ===== PROGRESS BAR ===== */
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--gold));z-index:1000;box-shadow:0 0 20px rgba(58,130,246,0.5);transition:width .5s cubic-bezier(.16,1,.3,1)}
+
+/* ===== FULLSCREEN BTN ===== */
+#fs-btn{position:fixed;top:16px;left:16px;z-index:1001;background:var(--surface);border:1px solid var(--border);color:var(--text-muted);width:40px;height:40px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;backdrop-filter:blur(12px);transition:all .3s}
+#fs-btn:hover{background:var(--surface-hover);color:var(--text);transform:scale(1.1)}
+
+/* ===== NAV BAR ===== */
+#nav{position:fixed;bottom:0;left:0;right:0;height:52px;background:rgba(7,11,20,0.85);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:1000}
+#nav button{background:var(--surface);border:1px solid var(--border);color:var(--text-muted);padding:7px 18px;border-radius:8px;cursor:pointer;font-family:"Inter",sans-serif;font-size:13px;font-weight:500;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:6px}
+#nav button:hover{background:rgba(58,130,246,0.15);border-color:var(--blue);color:var(--blue);transform:scale(1.08)}
+#nav button:disabled{opacity:.25;cursor:not-allowed;transform:none}
+#counter{color:var(--text-dim);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+
+/* ===== PARTICLES CANVAS ===== */
+#particles{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+/* ===== PRESENTATION CONTAINER ===== */
+.pres{width:100%;height:100%;position:relative;z-index:2;perspective:1400px}
+
+/* ===== SLIDES ===== */
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:60px 80px 65px;opacity:0;visibility:hidden;transform:translateX(100%) rotateY(12deg) scale(.85);transition:all .7s cubic-bezier(.16,1,.3,1);transform-style:preserve-3d}
+.slide.active{opacity:1;visibility:visible;transform:translateX(0) rotateY(0) scale(1)}
+.slide.exit{opacity:0;visibility:hidden;transform:translateX(-100%) rotateY(-12deg) scale(.85)}
+
+/* ===== SLIDE CONTENT ===== */
+.slide-inner{position:relative;z-index:1;width:100%;max-width:1400px;height:100%;display:flex;flex-direction:column;justify-content:center}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;width:100%}
+.col-text{display:flex;flex-direction:column;gap:14px}
+.col-img{display:flex;align-items:center;justify-content:center}
+.col-img img{width:100%;max-width:460px;height:auto;max-height:380px;object-fit:cover;border-radius:16px;border:1px solid var(--border);transition:all .5s cubic-bezier(.16,1,.3,1)}
+.col-img:hover img{transform:scale(1.03) translateZ(20px);box-shadow:0 20px 60px rgba(0,0,0,0.4),0 0 40px rgba(58,130,246,0.1)}
+
+/* ===== GRADIENT TEXT ===== */
+.gtext{background:linear-gradient(135deg,var(--blue),var(--cyan),var(--gold),var(--blue));background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:800;line-height:1.15;animation:gshift 6s ease infinite}
+@keyframes gshift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.stitle{font-size:2.2rem;font-weight:800;margin-bottom:6px}
+.ssub{font-size:1rem;color:var(--text-muted);font-weight:400;line-height:1.6}
+
+/* ===== GLASS CARD ===== */
+.glass{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.05);transition:all .4s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden}
+.glass::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,0.03) 40%,rgba(255,255,255,0.06) 50%,rgba(255,255,255,0.03) 60%,transparent 70%);transform:rotate(45deg) translateY(-100%);transition:transform .6s;pointer-events:none;z-index:1}
+.glass:hover::before{transform:rotate(45deg) translateY(100%)}
+.glass:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.3),0 0 0 1px var(--border-glow)}
+
+/* ===== QUOTE ===== */
+.quote{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 12px 12px 0;padding:18px 22px;font-style:italic;font-size:1rem;line-height:1.7;color:var(--text-muted);margin:10px 0;backdrop-filter:blur(12px)}
+.quote cite{display:block;margin-top:8px;font-style:normal;font-size:.8rem;color:var(--blue);font-weight:600}
+
+/* ===== BULLET LIST ===== */
+.blist{list-style:none;display:flex;flex-direction:column;gap:10px}
+.blist li{display:flex;align-items:flex-start;gap:10px;font-size:.95rem;line-height:1.6;color:var(--text-muted)}
+.blist li i{color:var(--blue);margin-top:3px;flex-shrink:0;font-size:.85rem}
+.blist li strong{color:var(--text);font-weight:600}
+
+/* ===== CHECKLIST ===== */
+.cklist{list-style:none;display:flex;flex-direction:column;gap:8px}
+.cklist li{display:flex;align-items:center;gap:10px;font-size:.9rem;color:var(--text-muted)}
+.cklist li i{color:var(--emerald);font-size:.8rem}
+
+/* ===== FLOWCHART ===== */
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.flow .step{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:.8rem;font-weight:600;color:var(--text);white-space:nowrap;transition:all .3s}
+.flow .step:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.3);border-color:var(--blue)}
+.flow .arr{color:var(--gold);font-size:.9rem;animation:apulse 2s ease-in-out infinite}
+@keyframes apulse{0%,100%{opacity:1;transform:translateX(0)}50%{opacity:.4;transform:translateX(3px)}}
+
+/* ===== SKILL CARDS ===== */
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;backdrop-filter:blur(16px);transition:all .4s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden}
+.scard::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,0.03) 40%,rgba(255,255,255,0.06) 50%,rgba(255,255,255,0.03) 60%,transparent 70%);transform:rotate(45deg) translateY(-100%);transition:transform .6s;pointer-events:none;z-index:1}
+.scard:hover::before{transform:rotate(45deg) translateY(100%)}
+.scard:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 16px 40px rgba(0,0,0,0.3);border-color:var(--border-glow)}
+.scard .icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto 10px;color:#fff}
+.scard h4{font-size:.95rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.scard p{font-size:.8rem;color:var(--text-muted);line-height:1.5}
+
+/* ===== RIPPLE CARDS (2x2) ===== */
+.ripple-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;backdrop-filter:blur(16px);transition:all .4s cubic-bezier(.175,.885,.32,1.275)}
+.rcard:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.3);border-color:var(--border-glow)}
+.rcard .icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;margin-bottom:8px;color:#fff}
+.rcard h4{font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.rcard p{font-size:.78rem;color:var(--text-muted);line-height:1.5}
+
+/* ===== CHALLENGE BOXES ===== */
+.cbox{border-radius:12px;padding:16px 18px;margin-bottom:10px}
+.cbox.problem{background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2)}
+.cbox.solution{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2)}
+.cbox .label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.cbox.problem .label{color:var(--rose)}
+.cbox.solution .label{color:var(--emerald)}
+.cbox p{font-size:.88rem;color:var(--text-muted);line-height:1.6}
+
+/* ===== TAKEAWAY CARDS ===== */
+.tkgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tkcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;backdrop-filter:blur(16px);transition:all .4s cubic-bezier(.175,.885,.32,1.275)}
+.tkcard:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.3);border-color:var(--border-glow)}
+.tkcard .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin:0 auto 8px;color:#fff}
+.tkcard h4{font-size:.88rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.tkcard p{font-size:.78rem;color:var(--text-muted);line-height:1.5}
+
+/* ===== SECTION DIVIDER ===== */
+.divider{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px}
+.divider .num{font-size:8rem;font-weight:900;opacity:.06;line-height:1;position:absolute;font-family:"Poppins",sans-serif;background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.divider .tag{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 16px;backdrop-filter:blur(12px)}
+
+/* ===== STAGGERED ENTRANCE ===== */
+.slide.active .stg{animation:stgIn .6s cubic-bezier(.16,1,.3,1) forwards;opacity:0}
+.slide.active .stg:nth-child(1){animation-delay:.1s}
+.slide.active .stg:nth-child(2){animation-delay:.2s}
+.slide.active .stg:nth-child(3){animation-delay:.3s}
+.slide.active .stg:nth-child(4){animation-delay:.4s}
+.slide.active .stg:nth-child(5){animation-delay:.5s}
+.slide.active .stg:nth-child(6){animation-delay:.6s}
+.slide.active .stg:nth-child(7){animation-delay:.7s}
+.slide.active .stg:nth-child(8){animation-delay:.8s}
+@keyframes stgIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* Card stagger for grids */
+.slide.active .cg .stg{animation:cgIn .5s cubic-bezier(.16,1,.3,1) forwards;opacity:0}
+.slide.active .cg .stg:nth-child(1){animation-delay:.15s}
+.slide.active .cg .stg:nth-child(2){animation-delay:.25s}
+.slide.active .cg .stg:nth-child(3){animation-delay:.35s}
+.slide.active .cg .stg:nth-child(4){animation-delay:.45s}
+.slide.active .cg .stg:nth-child(5){animation-delay:.55s}
+.slide.active .cg .stg:nth-child(6){animation-delay:.65s}
+@keyframes cgIn{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Source tag */
+.src{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text-dim);margin-top:6px}
+.src i{font-size:.7rem}
+
+/* Team list on title */
+.team-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.team-list .tm{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 14px;backdrop-filter:blur(10px)}
+.team-list .tm i{font-size:.8rem}
+
+@media(max-width:900px){
+.two-col{grid-template-columns:1fr;gap:24px}
+.col-img{display:none}
+.skills,.tkgrid{grid-template-columns:repeat(2,1fr)}
+.slide{padding:50px 24px 60px}
+.stitle{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+
+<div class="aurora-bg">
+<div class="aurora-blob"></div>
+<div class="aurora-blob"></div>
+<div class="aurora-blob"></div>
+<div class="aurora-blob"></div>
+</div>
+
+<canvas id="particles"></canvas>
+<div id="progress"></div>
+<button id="fs-btn" onclick="toggleFS()"><i class="fas fa-expand"></i></button>
+
+<div class="pres" id="pres">
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<div class="slide active" data-i="0">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<div class="stg" style="font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">University Presentation</div>
+<h1 class="stg gtext" style="font-size:3rem;margin-bottom:8px">Student to Future Leader</h1>
+<p class="stg ssub">Empowering the next generation of leaders through initiative, responsibility, and growth.</p>
+<div class="stg team-list">
+<span class="tm"><i class="fas fa-user" style="color:var(--blue)"></i>Habiba Mohamed</span>
+<span class="tm"><i class="fas fa-user" style="color:var(--gold)"></i>Habiba Kamal</span>
+<span class="tm"><i class="fas fa-user" style="color:var(--emerald)"></i>Mohamed Mostafa</span>
+<span class="tm"><i class="fas fa-user" style="color:var(--rose)"></i>Roqia Wael</span>
+<span class="tm"><i class="fas fa-user" style="color:var(--cyan)"></i>Farah Amr</span>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80" alt="Students"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 2: AGENDA ==================== -->
+<div class="slide" data-i="1">
+<div class="slide-inner">
+<h2 class="stg gtext stitle">Agenda</h2>
+<p class="stg ssub" style="margin-bottom:16px">What we will cover today</p>
+<div class="two-col cg">
+<div class="col-text" style="gap:10px">
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;flex-shrink:0"><i class="fas fa-lightbulb"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Section 1</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">What is Student-to-Future Leader?</div><div style="font-size:.75rem;color:var(--text-muted)">Habiba Mohamed</div></div></div>
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--rose));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;flex-shrink:0"><i class="fas fa-star"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Section 2</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">Essential Leadership Skills</div><div style="font-size:.75rem;color:var(--text-muted)">Habiba Kamal</div></div></div>
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--emerald));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;flex-shrink:0"><i class="fas fa-road"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Section 3</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">How to Become a Future Leader</div><div style="font-size:.75rem;color:var(--text-muted)">Mohamed Mostafa</div></div></div>
+</div>
+<div class="col-text" style="gap:10px">
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--rose),var(--gold));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;flex-shrink:0"><i class="fas fa-bolt"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Section 4</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">Challenges Students Face</div><div style="font-size:.75rem;color:var(--text-muted)">Roqia Wael</div></div></div>
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--emerald),var(--cyan));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;flex-shrink:0"><i class="fas fa-water"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Section 5</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">The Ripple Effect</div><div style="font-size:.75rem;color:var(--text-muted)">Farah Amr</div></div></div>
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--cyan),var(--emerald));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;flex-shrink:0"><i class="fas fa-flag-checkered"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Closing</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">Key Takeaways & Thank You</div></div></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 3: SECTION 1 DIVIDER ==================== -->
+<div class="slide" data-i="2">
+<div class="slide-inner divider">
+<div class="num stg">01</div>
+<h2 class="stg gtext" style="font-size:2.6rem;position:relative;z-index:1">What is Student-to-Future Leader?</h2>
+<div class="stg tag"><i class="fas fa-microphone"></i>Habiba Mohamed</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 4: WHAT DOES IT MEAN ==================== -->
+<div class="slide" data-i="3">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">What Does It Mean?</h2>
+<div class="stg quote">"The Student-to-Future-Leader framework is about transforming students from passive learners into active change-makers within their institutions and communities."<cite>- Educational Leadership Theory</cite></div>
+<p class="stg ssub">It is a mindset shift - from waiting for permission to taking ownership. Every student has the potential to lead; it starts with recognizing that leadership is not a title, it is a practice.</p>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" alt="Students collaborating"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 5: KEY IDEAS ==================== -->
+<div class="slide" data-i="4">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">Key Ideas</h2>
+<ul class="stg blist">
+<li><i class="fas fa-check-circle"></i><div><strong>Leadership is a journey</strong> - not a destination. It starts with small steps and grows with experience.</div></li>
+<li><i class="fas fa-check-circle"></i><div><strong>Every student can lead</strong> - leadership is not reserved for the loudest or most popular.</div></li>
+<li><i class="fas fa-check-circle"></i><div><strong>Skills are built through practice</strong> - communication, teamwork, and decision-making improve with real involvement.</div></li>
+<li><i class="fas fa-check-circle"></i><div><strong>Mistakes are teachers</strong> - failures become lessons that shape stronger leaders.</div></li>
+<li><i class="fas fa-check-circle"></i><div><strong>Community matters</strong> - great leaders lift others up and build supportive environments.</div></li>
+<li><i class="fas fa-check-circle"></i><div><strong>Start now, not later</strong> - waiting for the right time means never starting at all.</div></li>
+</ul>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" alt="Team brainstorming"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 6: THE JOURNEY ==================== -->
+<div class="slide" data-i="5">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">The Journey</h2>
+<p class="stg ssub">From student to leader - a step-by-step path</p>
+<div class="stg flow">
+<span class="step">Student</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Participate</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Initiative</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Responsibility</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Skills</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Leader</span>
+</div>
+<div class="stg glass" style="margin-top:8px">
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">The journey begins as a curious student, evolves through active participation, grows with taking initiative, matures through accepting responsibility, sharpens with skill development, and culminates in true leadership.</p>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80" alt="Team collaboration"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 7: REAL-LIFE EXAMPLE ==================== -->
+<div class="slide" data-i="6">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">Real-Life Example</h2>
+<div class="stg glass" style="border-top:3px solid var(--gold)">
+<h4 style="font-size:.9rem;font-weight:700;color:var(--gold);margin-bottom:8px">The Student Council President</h4>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">A second-year student noticed that campus events were losing attendance. Instead of complaining, she organized a small team, surveyed 200 students, and proposed a new event format to the administration. Within one semester, attendance doubled. She did not wait for a title - she saw a problem and acted.</p>
+</div>
+<div class="stg quote">"Leadership is not about waiting for the perfect moment. It is about creating it."</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80" alt="Conference event"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 8: MAIN IDEA ==================== -->
+<div class="slide" data-i="7">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">Main Idea</h2>
+<div class="stg quote">"Leadership is a journey that begins with a single step: the decision to take ownership."</div>
+<ul class="stg cklist">
+<li><i class="fas fa-check-square"></i>Start with small, manageable projects</li>
+<li><i class="fas fa-check-square"></i>Reflect on every experience - good or bad</li>
+<li><i class="fas fa-check-square"></i>Build relationships across diverse groups</li>
+<li><i class="fas fa-check-square"></i>Stay curious and keep learning</li>
+<li><i class="fas fa-check-square"></i>Lead by example, not by authority</li>
+</ul>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=800&q=80" alt="Group of friends"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 9: SECTION 2 DIVIDER ==================== -->
+<div class="slide" data-i="8">
+<div class="slide-inner divider">
+<div class="num stg">02</div>
+<h2 class="stg gtext" style="font-size:2.6rem;position:relative;z-index:1">Essential Leadership Skills</h2>
+<div class="stg tag"><i class="fas fa-microphone"></i>Habiba Kamal</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 10: SKILLS OVERVIEW ==================== -->
+<div class="slide" data-i="9">
+<div class="slide-inner">
+<h2 class="stg gtext stitle">Skills Overview</h2>
+<p class="stg ssub" style="margin-bottom:14px">The five pillars of effective student leadership</p>
+<div class="stg skills cg">
+<div class="stg scard"><div class="icon" style="background:linear-gradient(135deg,var(--blue),var(--cyan))"><i class="fas fa-comments"></i></div><h4>Communication</h4><p>Expressing ideas clearly and listening actively</p></div>
+<div class="stg scard"><div class="icon" style="background:linear-gradient(135deg,var(--gold),var(--rose))"><i class="fas fa-people-group"></i></div><h4>Teamwork</h4><p>Collaborating effectively toward shared goals</p></div>
+<div class="stg scard"><div class="icon" style="background:linear-gradient(135deg,var(--gold),var(--emerald))"><i class="fas fa-scale-balanced"></i></div><h4>Decision Making</h4><p>Choosing wisely under pressure and uncertainty</p></div>
+<div class="stg scard"><div class="icon" style="background:linear-gradient(135deg,var(--emerald),var(--cyan))"><i class="fas fa-puzzle-piece"></i></div><h4>Problem Solving</h4><p>Finding creative solutions to complex challenges</p></div>
+<div class="stg scard"><div class="icon" style="background:linear-gradient(135deg,var(--rose),var(--gold))"><i class="fas fa-shield-halved"></i></div><h4>Confidence</h4><p>Trusting your abilities and inspiring others</p></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 11: COMMUNICATION ==================== -->
+<div class="slide" data-i="10">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">Communication</h2>
+<ul class="stg blist">
+<li><i class="fas fa-angle-right"></i><div><strong>Clarity:</strong> Articulate your vision in simple, compelling language</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Active Listening:</strong> Pay full attention, ask clarifying questions, and acknowledge others</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Feedback:</strong> Give and receive constructive feedback gracefully</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Non-verbal:</strong> Body language, eye contact, and tone matter as much as words</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Presentation:</strong> Public speaking builds credibility and influence</div></li>
+</ul>
+<div class="stg src"><i class="fas fa-book"></i>Source: MindTools - Communication Skills</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="Team communication"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 12: TEAMWORK ==================== -->
+<div class="slide" data-i="11">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">Teamwork</h2>
+<ul class="stg blist">
+<li><i class="fas fa-angle-right"></i><div><strong>Shared Vision:</strong> Align the team around a common purpose and goals</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Trust Building:</strong> Create reliability through consistent actions and honesty</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Role Clarity:</strong> Ensure everyone knows their responsibilities</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Conflict Resolution:</strong> Address disagreements early and constructively</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Celebration:</strong> Acknowledge team wins, no matter how small</div></li>
+</ul>
+<div class="stg src"><i class="fas fa-book"></i>Source: MindTools - Teamwork Skills</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&q=80" alt="Teamwork hands"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 13: DECISION MAKING ==================== -->
+<div class="slide" data-i="12">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">Decision Making</h2>
+<ul class="stg blist">
+<li><i class="fas fa-angle-right"></i><div><strong>Gather Information:</strong> Research facts and perspectives before deciding</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Weigh Options:</strong> Consider pros, cons, and potential outcomes</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Act Decisively:</strong> Avoid analysis paralysis - make the call</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Evaluate:</strong> Review results and adjust your approach for next time</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Involve Others:</strong> Seek input from your team for diverse viewpoints</div></li>
+</ul>
+<div class="stg src"><i class="fas fa-book"></i>Source: MindTools - Decision Making Skills</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" alt="Person thinking"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 14: PROBLEM SOLVING ==================== -->
+<div class="slide" data-i="13">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">Problem Solving</h2>
+<ul class="stg blist">
+<li><i class="fas fa-angle-right"></i><div><strong>Define the Problem:</strong> Clearly identify what needs to be solved</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Brainstorm Solutions:</strong> Generate multiple options without judgment</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Analyze Feasibility:</strong> Evaluate which solutions are practical and impactful</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Implement:</strong> Execute the chosen solution with a clear plan</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Learn:</strong> Extract lessons from the process to handle future challenges</div></li>
+</ul>
+<div class="stg src"><i class="fas fa-book"></i>Source: MindTools - Problem Solving Skills</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80" alt="People working on laptops"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 15: CONFIDENCE ==================== -->
+<div class="slide" data-i="14">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">Confidence</h2>
+<ul class="stg blist">
+<li><i class="fas fa-angle-right"></i><div><strong>Self-Awareness:</strong> Know your strengths and areas for growth</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Preparation:</strong> Confidence comes from being well-prepared</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Small Wins:</strong> Build momentum through achievable goals</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Resilience:</strong> Bounce back from setbacks with renewed determination</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Inspire Others:</strong> Your confidence gives permission for others to believe in themselves</div></li>
+</ul>
+<div class="stg src"><i class="fas fa-book"></i>Source: MindTools - Confidence Building</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80" alt="Confident person"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 16: SECTION 3 DIVIDER ==================== -->
+<div class="slide" data-i="15">
+<div class="slide-inner divider">
+<div class="num stg">03</div>
+<h2 class="stg gtext" style="font-size:2.4rem;position:relative;z-index:1">How to Become a Future Leader</h2>
+<div class="stg tag"><i class="fas fa-microphone"></i>Mohamed Mostafa</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 17: TAKE INITIATIVE ==================== -->
+<div class="slide" data-i="16">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Take Initiative and Accept Responsibility</h2>
+<div class="stg glass" style="border-top:3px solid var(--blue)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-rocket" style="color:var(--blue)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--blue)">Take Initiative</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Do not wait to be asked. Step up and volunteer for tasks and projects. Share your ideas and suggestions proactively. Leaders do not wait for permission - they create opportunities.</p>
+</div>
+<div class="stg glass" style="border-top:3px solid var(--gold)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-handshake" style="color:var(--gold)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--gold)">Accept Responsibility</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Own your tasks and outcomes. Accountability builds trust and respect from your peers and supervisors. When things go wrong, a leader takes ownership and finds solutions.</p>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="Team taking initiative"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 18: TEAMWORK & MOTIVATION ==================== -->
+<div class="slide" data-i="17">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Build Teamwork and Stay Motivated</h2>
+<div class="stg glass" style="border-top:3px solid var(--emerald)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-people-group" style="color:var(--emerald)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--emerald)">Build Teamwork</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Collaborate and support others. Great leaders lift everyone up and create an environment where everyone can contribute. Your success is measured by your team success.</p>
+</div>
+<div class="stg glass" style="border-top:3px solid var(--gold)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-fire" style="color:var(--gold)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--gold)">Stay Motivated</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Keep your vision alive even when facing obstacles. Set clear goals and remind yourself why you started. Motivation is the fuel that keeps you going when things get tough.</p>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" alt="Team collaboration"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 19: MISTAKES & LISTENING ==================== -->
+<div class="slide" data-i="18">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Learn from Mistakes and Be a Good Listener</h2>
+<div class="stg glass" style="border-top:3px solid var(--rose)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-graduation-cap" style="color:var(--rose)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--rose)">Learn from Mistakes</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Every failure is a lesson. Embrace growth through experience and do not be afraid to try new approaches. The best leaders have failed the most - they just never stopped learning.</p>
+</div>
+<div class="stg glass" style="border-top:3px solid var(--blue)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-ear-listen" style="color:var(--blue)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--blue)">Be a Good Listener</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Pay attention to what others say. Understanding different perspectives helps you make better decisions. Active listening is a superpower that most leaders underestimate.</p>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80" alt="Active listening"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 20: COMMUNICATION SKILLS ==================== -->
+<div class="slide" data-i="19">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle">Develop Communication Skills</h2>
+<ul class="stg blist">
+<li><i class="fas fa-angle-right"></i><div><strong>Public Speaking:</strong> Practice presenting in front of groups regularly</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Clear Communication:</strong> The backbone of effective leadership</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Audience Awareness:</strong> Learn to adapt your message to different audiences</div></li>
+<li><i class="fas fa-angle-right"></i><div><strong>Feedback Mastery:</strong> Master the art of giving and receiving constructive feedback</div></li>
+</ul>
+<div class="stg glass" style="margin-top:6px;border-top:3px solid var(--gold)">
+<h4 style="font-size:.85rem;font-weight:700;color:var(--gold);margin-bottom:6px">All 8 Steps at a Glance</h4>
+<div class="flow">
+<span class="step">Initiative</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Responsibility</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Teamwork</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Motivation</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Mistakes</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Listening</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Communication</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
+<span class="step">Leadership</span>
+</div>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" alt="Communication skills"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 21: SECTION 4 DIVIDER ==================== -->
+<div class="slide" data-i="20">
+<div class="slide-inner divider">
+<div class="num stg">04</div>
+<h2 class="stg gtext" style="font-size:2.6rem;position:relative;z-index:1">Challenges Students Face</h2>
+<div class="stg tag"><i class="fas fa-microphone"></i>Roqia Wael</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 22: CHALLENGE 1 ==================== -->
+<div class="slide" data-i="21">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Challenge 1: Fear of Commitment</h2>
+<div class="stg cbox problem">
+<div class="label"><i class="fas fa-triangle-exclamation"></i>Problem</div>
+<p>Year-long roles burn students out and scare them off from taking leadership positions. The sheer time commitment feels overwhelming alongside academics and personal life.</p>
+</div>
+<div class="stg cbox solution">
+<div class="label"><i class="fas fa-check-circle"></i>Solution</div>
+<p>Use 30-day mini-projects with rotating roles so students can try leadership without a huge time commitment. This lowers the barrier to entry and builds confidence gradually.</p>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80" alt="Person working at desk"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 23: CHALLENGE 2 ==================== -->
+<div class="slide" data-i="22">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Challenge 2: Fear of Failure</h2>
+<div class="stg cbox problem">
+<div class="label"><i class="fas fa-triangle-exclamation"></i>Problem</div>
+<p>Students are terrified of making mistakes in public and being judged by their peers. This fear paralyzes them from taking risks or sharing bold ideas.</p>
+</div>
+<div class="stg cbox solution">
+<div class="label"><i class="fas fa-check-circle"></i>Solution</div>
+<p>Hold monthly debriefs to talk openly about failed projects and reward teams for learning and adapting. Normalize failure as a stepping stone to growth.</p>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80" alt="Art exhibition"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 24: CHALLENGE 3 ==================== -->
+<div class="slide" data-i="23">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Challenge 3: Lack of Experience</h2>
+<div class="stg cbox problem">
+<div class="label"><i class="fas fa-triangle-exclamation"></i>Problem</div>
+<p>Real-world processes and administrative rules intimidate new leaders who feel unprepared for the complexities of formal leadership roles.</p>
+</div>
+<div class="stg cbox solution">
+<div class="label"><i class="fas fa-check-circle"></i>Solution</div>
+<p>Pair new students with experienced leaders for 2 days to shadow their actual meetings and decisions. Hands-on learning bridges the experience gap faster than any textbook.</p>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=800&q=80" alt="Mentoring session"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 25: SECTION 5 DIVIDER ==================== -->
+<div class="slide" data-i="24">
+<div class="slide-inner divider">
+<div class="num stg">05</div>
+<h2 class="stg gtext" style="font-size:2.6rem;position:relative;z-index:1">The Ripple Effect</h2>
+<div class="stg tag"><i class="fas fa-microphone"></i>Farah Amr</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 26: INDIVIDUAL TRANSFORMATION ==================== -->
+<div class="slide" data-i="25">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Individual Transformation</h2>
+<div class="stg ripple-grid cg">
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--blue),var(--cyan))"><i class="fas fa-brain"></i></div><h4>Emotional Intelligence</h4><p>Developing deep empathy and self-awareness under pressure</p></div>
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--gold),var(--rose))"><i class="fas fa-rocket"></i></div><h4>Skill Acceleration</h4><p>Mastering public speaking, negotiation, and conflict resolution</p></div>
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--gold),var(--emerald))"><i class="fas fa-mountain"></i></div><h4>Self-Efficacy</h4><p>Proving personal agency by turning abstract ideas into tangible reality</p></div>
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--emerald),var(--cyan))"><i class="fas fa-compass"></i></div><h4>Ethical Grounding</h4><p>Defining personal values and boundaries early in life</p></div>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&q=80" alt="Team brainstorming"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 27: TEAM DYNAMIC ==================== -->
+<div class="slide" data-i="26">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Team Dynamic</h2>
+<div class="stg ripple-grid cg">
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--blue),var(--cyan))"><i class="fas fa-handshake"></i></div><h4>Leading Without Authority</h4><p>Relying on inspiration and shared vision rather than financial incentives</p></div>
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--gold),var(--rose))"><i class="fas fa-shield-heart"></i></div><h4>Psychological Safety</h4><p>Creating inclusive spaces where peers can voice dissent and fail forward</p></div>
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--gold),var(--emerald))"><i class="fas fa-diagram-project"></i></div><h4>Synthesizing Chaos</h4><p>Turning fragmented peer ideas into unified, actionable goals</p></div>
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--emerald),var(--cyan))"><i class="fas fa-users-gear"></i></div><h4>The Talent Pipeline</h4><p>Mentoring the next generation to ensure long-term organizational survival</p></div>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="Team working together"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 28: SOCIETAL IMPACT ==================== -->
+<div class="slide" data-i="27">
+<div class="slide-inner">
+<div class="two-col">
+<div class="col-text">
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Societal Impact</h2>
+<div class="stg ripple-grid cg">
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--rose),var(--gold))"><i class="fas fa-fire"></i></div><h4>Unburdened Idealism</h4><p>Challenging stagnant status quos that older generations accept</p></div>
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--emerald),var(--cyan))"><i class="fas fa-seedling"></i></div><h4>Grassroots Innovation</h4><p>Launching agile, community-first solutions without corporate bureaucracy</p></div>
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--blue),var(--cyan))"><i class="fas fa-building-columns"></i></div><h4>Institutional Accountability</h4><p>Bridging the gap between the public and powerful administrations</p></div>
+<div class="stg rcard"><div class="icon" style="background:linear-gradient(135deg,var(--gold),var(--rose))"><i class="fas fa-globe"></i></div><h4>Future Global Pipeline</h4><p>Cultivating the ethical politicians, conscious CEOs, and organizers of tomorrow</p></div>
+</div>
+</div>
+<div class="col-img stg"><img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&q=80" alt="Community gathering"></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 29: KEY TAKEAWAYS ==================== -->
+<div class="slide" data-i="28">
+<div class="slide-inner">
+<h2 class="stg gtext stitle">Key Takeaways</h2>
+<p class="stg ssub" style="margin-bottom:14px">What to remember from today presentation</p>
+<div class="stg tkgrid cg">
+<div class="stg tkcard"><div class="icon" style="background:linear-gradient(135deg,var(--blue),var(--cyan))"><i class="fas fa-compass"></i></div><h4>Start Now</h4><p>Leadership begins with the first step. Do not wait for the perfect moment.</p></div>
+<div class="stg tkcard"><div class="icon" style="background:linear-gradient(135deg,var(--gold),var(--rose))"><i class="fas fa-book-open"></i></div><h4>Learn Constantly</h4><p>Every experience is a lesson. Embrace failures as teachers.</p></div>
+<div class="stg tkcard"><div class="icon" style="background:linear-gradient(135deg,var(--gold),var(--emerald))"><i class="fas fa-people-group"></i></div><h4>Build Teams</h4><p>Great leaders lift others up. Collaboration creates lasting impact.</p></div>
+<div class="stg tkcard"><div class="icon" style="background:linear-gradient(135deg,var(--emerald),var(--cyan))"><i class="fas fa-comments"></i></div><h4>Communicate</h4><p>Clear communication is the backbone of every successful leader.</p></div>
+<div class="stg tkcard"><div class="icon" style="background:linear-gradient(135deg,var(--rose),var(--gold))"><i class="fas fa-bolt"></i></div><h4>Be Resilient</h4><p>Bounce back from setbacks. Resilience is built through challenge.</p></div>
+<div class="stg tkcard"><div class="icon" style="background:linear-gradient(135deg,var(--cyan),var(--blue))"><i class="fas fa-water"></i></div><h4>Think Big</h4><p>Your actions create ripples that extend far beyond yourself.</p></div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 30: THANK YOU ==================== -->
+<div class="slide" data-i="29">
+<div class="slide-inner divider">
+<h1 class="stg gtext" style="font-size:3.2rem;position:relative;z-index:1">Thank You</h1>
+<p class="stg" style="font-size:1.1rem;color:var(--text-muted);position:relative;z-index:1;margin-bottom:12px">The future belongs to those who lead today.</p>
+<div class="stg team-list" style="justify-content:center;position:relative;z-index:1">
+<span class="tm"><i class="fas fa-user-circle" style="color:var(--blue)"></i>Habiba Mohamed</span>
+<span class="tm"><i class="fas fa-user-circle" style="color:var(--gold)"></i>Habiba Kamal</span>
+<span class="tm"><i class="fas fa-user-circle" style="color:var(--emerald)"></i>Mohamed Mostafa</span>
+<span class="tm"><i class="fas fa-user-circle" style="color:var(--rose)"></i>Roqia Wael</span>
+<span class="tm"><i class="fas fa-user-circle" style="color:var(--cyan)"></i>Farah Amr</span>
+</div>
+<div class="stg" style="font-size:.8rem;color:var(--text-dim);position:relative;z-index:1;margin-top:10px">Questions and Discussion</div>
+</div>
+</div>
+
+</div>
+
+<!-- NAV BAR -->
+<div id="nav">
+<button id="prev" onclick="go(-1)"><i class="fas fa-arrow-left"></i> Prev</button>
+<span id="counter">1 / 30</span>
+<button id="next" onclick="go(1)">Next <i class="fas fa-arrow-right"></i></button>
+</div>
+
+<script>
+const slides=document.querySelectorAll('.slide'),total=slides.length;
+let cur=0,animating=false;
+const progress=document.getElementById('progress'),counter=document.getElementById('counter'),
+prevBtn=document.getElementById('prev'),nextBtn=document.getElementById('next');
+
+function updateUI(){
+progress.style.width=((cur+1)/total*100)+'%';
+counter.textContent=(cur+1)+' / '+total;
+prevBtn.disabled=cur===0;nextBtn.disabled=cur===total-1;
+}
+
+function go(dir){
+if(animating)return;
+const next=cur+dir;
+if(next<0||next>=total)return;
+animating=true;
+const old=slides[cur],nw=slides[next];
+// Reset stagger animations on old slide
+old.querySelectorAll('.stg').forEach(e=>{e.style.animation='none';e.style.opacity='0'});
+old.classList.remove('active');
+old.classList.add(dir>0?'exit':'');
+nw.classList.remove('exit');
+nw.classList.add('active');
+// Force reflow for stagger animations
+void nw.offsetWidth;
+nw.querySelectorAll('.stg').forEach(e=>{e.style.animation='';e.style.opacity=''});
+cur=next;updateUI();
+setTimeout(()=>{animating=false;old.classList.remove('exit')},700);
+}
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+if(e.key==='ArrowRight'||e.key===' ')go(1);
+else if(e.key==='ArrowLeft')go(-1);
+else if(e.key==='f'||e.key==='F')toggleFS();
+});
+
+// Touch
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)go(dx<0?1:-1)},{passive:true});
+
+// Fullscreen
+function toggleFS(){
+if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});
+else document.exitFullscreen();
+}
+
+// Particles
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+let W,H,particles=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+window.addEventListener('resize',resize);resize();
+
+class Particle{
+constructor(){this.reset()}
+reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*1.5+.5;this.a=Math.random()*.3+.1}
+update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1}
+draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(58,130,246,${this.a})`;ctx.fill()}
+}
+
+for(let i=0;i<60;i++)particles.push(new Particle());
+
+function animate(){
+ctx.clearRect(0,0,W,H);
+particles.forEach(p=>{p.update();p.draw()});
+// Connect nearby
+for(let i=0;i<particles.length;i++){
+for(let j=i+1;j<particles.length;j++){
+const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
+if(d<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(58,130,246,${.08*(1-d/120)})`;ctx.stroke()}
+}
+}
+requestAnimationFrame(animate);
+}
+animate();
+
+updateUI();
+</script>
+</body>
+</html>
