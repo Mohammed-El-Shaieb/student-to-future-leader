@@ -49,6 +49,26 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 @keyframes spin4{from{transform:rotateX(-10deg) rotateY(0deg)}to{transform:rotateX(-10deg) rotateY(360deg)}}
 @keyframes spin5{from{transform:rotateX(25deg) rotateY(0deg) rotateZ(30deg)}to{transform:rotateX(25deg) rotateY(-360deg) rotateZ(30deg)}}
 
+/* ===== 3D RING ===== */
+.ring3d{position:absolute;top:50%;left:50%;transform-style:preserve-3d;animation:ringSpin 12s linear infinite}
+.ring3d .ring-seg{position:absolute;width:320px;height:320px;border:2px solid rgba(200,169,110,0.08);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
+@keyframes ringSpin{from{transform:rotateX(70deg) rotateY(0deg) translate(-50%,-50%)}to{transform:rotateX(70deg) rotateY(360deg) translate(-50%,-50%)}}
+
+/* ===== 3D PYRAMID ===== */
+.pyramid3d{position:absolute;width:140px;height:140px;transform-style:preserve-3d;animation:pyrFloat 16s ease-in-out infinite;opacity:.1}
+.pyramid3d .tri{position:absolute;width:0;height:0;border-left:70px solid transparent;border-right:70px solid transparent;border-bottom:121px solid rgba(200,169,110,0.06);transform-origin:bottom center;backface-visibility:visible}
+.pyramid3d .tri:nth-child(1){transform:rotateX(19.47deg) translateY(-40px)}
+.pyramid3d .tri:nth-child(2){transform:rotateY(90deg) rotateX(19.47deg) translateY(-40px)}
+.pyramid3d .tri:nth-child(3){transform:rotateY(180deg) rotateX(19.47deg) translateY(-40px)}
+.pyramid3d .tri:nth-child(4){transform:rotateY(270deg) rotateX(19.47deg) translateY(-40px)}
+.pyramid3d .base{position:absolute;width:140px;height:140px;border:1px solid rgba(200,169,110,0.05);transform:rotateX(90deg) translateZ(-60px);top:0;left:0}
+@keyframes pyrFloat{0%{transform:translateY(0) rotateY(0deg) rotateX(15deg)}25%{transform:translateY(-20px) rotateY(90deg) rotateX(20deg)}50%{transform:translateY(0) rotateY(180deg) rotateX(15deg)}75%{transform:translateY(20px) rotateY(270deg) rotateX(10deg)}100%{transform:translateY(0) rotateY(360deg) rotateX(15deg)}}
+
+/* ===== 3D GRID FLOOR ===== */
+.grid3d{position:absolute;bottom:0;left:0;right:0;height:45%;perspective:600px;overflow:hidden;opacity:.06}
+.grid3d-inner{position:absolute;inset:0;transform:rotateX(65deg);transform-origin:bottom center;background-image:repeating-linear-gradient(90deg,rgba(200,169,110,0.4) 0px,rgba(200,169,110,0.4) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(0deg,rgba(200,169,110,0.4) 0px,rgba(200,169,110,0.4) 1px,transparent 1px,transparent 60px);background-size:60px 60px;animation:gridScroll 8s linear infinite}
+@keyframes gridScroll{from{background-position:0 0}to{background-position:0 60px}}
+
 .glow-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.08;will-change:transform}
 .glow-orb.g1{width:50vw;height:50vw;top:-10%;left:-5%;background:radial-gradient(circle,var(--gold),transparent 70%);animation:gdrift1 22s ease-in-out infinite alternate}
 .glow-orb.g2{width:40vw;height:40vw;bottom:-15%;right:-5%;background:radial-gradient(circle,var(--accent),transparent 70%);animation:gdrift2 28s ease-in-out infinite alternate}
@@ -235,6 +255,22 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 <div class="face f" style="width:60px;height:60px"></div><div class="face b" style="width:60px;height:60px"></div><div class="face l" style="width:60px;height:60px"></div><div class="face r" style="width:60px;height:60px"></div><div class="face t" style="width:60px;height:60px"></div><div class="face bt" style="width:60px;height:60px"></div>
 </div>
 </div>
+
+<!-- 3D RING -->
+<div class="ring3d">
+<div class="ring-seg"></div>
+<div class="ring-seg" style="width:260px;height:260px;border-color:rgba(200,169,110,0.05)"></div>
+<div class="ring-seg" style="width:200px;height:200px;border-color:rgba(200,169,110,0.03)"></div>
+</div>
+
+<!-- 3D PYRAMID -->
+<div class="pyramid3d" style="top:18%;left:8%">
+<div class="tri"></div><div class="tri"></div><div class="tri"></div><div class="tri"></div>
+<div class="base"></div>
+</div>
+
+<!-- 3D GRID FLOOR -->
+<div class="grid3d"><div class="grid3d-inner"></div></div>
 
 <canvas id="particles"></canvas>
 <div id="progress"></div>
