@@ -28,8 +28,27 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 .s4{--sec:#b87a5e;--sec-light:#d09478;--sec-dim:rgba(184,122,94,0.3);--sec-glow:rgba(184,122,94,0.15)}
 .s5{--sec:#8b7ec8;--sec-light:#a89bde;--sec-dim:rgba(139,126,200,0.3);--sec-glow:rgba(139,126,200,0.15)}
 
+/* ===== VIDEO BACKGROUND ===== */
+.video-bg{position:fixed;inset:0;z-index:0;overflow:hidden}
+.video-bg video{width:100%;height:100%;object-fit:cover;opacity:.18;filter:saturate(.3) brightness(.6);transition:opacity 2s ease}
+.video-bg video.loaded{opacity:.18}
+.video-overlay{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(14,13,11,.55) 0%,rgba(14,13,11,.85) 60%,rgba(14,13,11,.95) 100%);pointer-events:none;animation:overlayPulse 8s ease-in-out infinite alternate}
+@keyframes overlayPulse{0%{opacity:.85}50%{opacity:.92}100%{opacity:.85}}
+
+/* ===== CSS ANIMATED BLOBS ===== */
+.anim-layer{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.ablob{position:absolute;border-radius:50%;filter:blur(80px);mix-blend-mode:screen;will-change:transform}
+.ab1{width:500px;height:500px;top:-10%;left:10%;background:radial-gradient(circle,rgba(200,169,110,0.12),transparent 70%);animation:abFloat1 18s ease-in-out infinite alternate}
+.ab2{width:400px;height:400px;bottom:5%;right:15%;background:radial-gradient(circle,rgba(110,154,139,0.1),transparent 70%);animation:abFloat2 22s ease-in-out infinite alternate}
+.ab3{width:350px;height:350px;top:40%;left:60%;background:radial-gradient(circle,rgba(139,126,200,0.08),transparent 70%);animation:abFloat3 25s ease-in-out infinite alternate}
+.ab4{width:300px;height:300px;top:20%;left:40%;background:radial-gradient(circle,rgba(196,134,58,0.07),transparent 70%);animation:abFloat4 20s ease-in-out infinite alternate}
+@keyframes abFloat1{0%{transform:translate(0,0) scale(1)}33%{transform:translate(80px,60px) scale(1.15)}66%{transform:translate(-40px,100px) scale(.9)}100%{transform:translate(50px,-30px) scale(1.08)}}
+@keyframes abFloat2{0%{transform:translate(0,0) scale(1)}33%{transform:translate(-70px,-50px) scale(1.1)}66%{transform:translate(60px,-80px) scale(.85)}100%{transform:translate(-30px,40px) scale(1.05)}}
+@keyframes abFloat3{0%{transform:translate(0,0) scale(1)}50%{transform:translate(100px,30px) scale(1.2)}100%{transform:translate(-50px,-60px) scale(.95)}}
+@keyframes abFloat4{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-80px,80px) scale(1.1)}100%{transform:translate(60px,-40px) scale(.9)}}
+
 /* ===== 3D BACKGROUND CUBES ===== */
-.scene-3d{position:fixed;inset:0;z-index:0;overflow:hidden;perspective:1200px;background:radial-gradient(ellipse at 30% 20%,rgba(200,169,110,0.06) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(139,126,200,0.05) 0%,transparent 50%),var(--bg)}
+.scene-3d{position:fixed;inset:0;z-index:0;overflow:hidden;perspective:1200px;background:transparent}
 .cube-wire{position:absolute;transform-style:preserve-3d;opacity:.45}
 .cube-wire .face{position:absolute;border:1.5px solid rgba(200,169,110,0.5);background:rgba(200,169,110,0.04);backface-visibility:visible}
 .cube-wire.c1{width:240px;height:240px;top:5%;right:8%;animation:spin1 20s linear infinite}
@@ -231,10 +250,33 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 .slide{padding:50px 24px 60px}
 .stitle{font-size:1.6rem}
 .cube-wire{display:none}
+.video-bg video{display:none}
+.video-bg{background:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=80') center/cover no-repeat;opacity:.15}
+}
+@media(prefers-reduced-motion:reduce){
+.video-bg video{display:none}
+.ablob{animation:none!important}
 }
 </style>
 </head>
 <body>
+
+<!-- VIDEO BACKGROUND -->
+<div class="video-bg" id="videoBg">
+<video autoplay loop muted playsinline id="bgVideo" poster="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=80">
+<source src="https://videos.pexels.com/video-files/3191887/3191887-hd_1920_1080_25fps.mp4" type="video/mp4">
+<source src="https://videos.pexels.com/video-files/3201568/3201568-hd_1920_1080_25fps.mp4" type="video/mp4">
+</video>
+</div>
+<div class="video-overlay"></div>
+
+<!-- CSS ANIMATED BLOBS -->
+<div class="anim-layer">
+<div class="ablob ab1"></div>
+<div class="ablob ab2"></div>
+<div class="ablob ab3"></div>
+<div class="ablob ab4"></div>
+</div>
 
 <div class="scene-3d">
 <div class="glow-orb g1"></div>
@@ -876,6 +918,13 @@ const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
 let W,H;
 function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
 window.addEventListener('resize',resize);resize();
+
+/* ===== VIDEO BACKGROUND HANDLER ===== */
+const bgVideo=document.getElementById('bgVideo');
+if(bgVideo){
+bgVideo.addEventListener('canplay',()=>{bgVideo.classList.add('loaded')});
+bgVideo.addEventListener('error',()=>{bgVideo.style.display='none'});
+}
 
 let mouseX=W/2,mouseY=H/2,pmouseX=mouseX,pmouseY=mouseY;
 document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});
