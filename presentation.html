@@ -106,6 +106,27 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 #particles{position:fixed;inset:0;z-index:1;pointer-events:none}
 .pres{width:100%;height:100%;position:relative;z-index:2;perspective:1400px}
 
+/* ===== SLIDE BACKGROUNDS ===== */
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:60px 80px 60px;opacity:0;visibility:hidden;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.16,1,.3,1),opacity .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1);overflow:hidden}
+.slide-bg{position:absolute;inset:-40px;z-index:-1;background-size:cover;background-position:center;filter:blur(20px) saturate(.3) brightness(.25);transform:scale(1.1);animation:kenBurns 20s ease-in-out infinite alternate;opacity:.5}
+@keyframes kenBurns{0%{transform:scale(1.1) translate(0,0)}100%{transform:scale(1.2) translate(-2%,1%)}}
+.slide-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(14,13,11,.5) 0%,rgba(14,13,11,.85) 70%,rgba(14,13,11,.95) 100%)}
+.slide.active .slide-bg{animation:kenBurns 20s ease-in-out infinite alternate}
+.slide:not(.active) .slide-bg{animation:none;transform:scale(1.1)}
+
+/* ===== KEN BURNS ON IMAGES ===== */
+.col-img img{animation:imgKen 15s ease-in-out infinite alternate}
+@keyframes imgKen{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.05) translate(-1%,1%)}}
+
+/* ===== SECTION COLOR TRANSITIONS ===== */
+body{transition:background 1.5s ease}
+body.sec-intro{background:radial-gradient(ellipse at 30% 30%,rgba(200,169,110,0.06) 0%,var(--bg) 60%)}
+body.sec-s1{background:radial-gradient(ellipse at 30% 30%,rgba(200,169,110,0.06) 0%,var(--bg) 60%)}
+body.sec-s2{background:radial-gradient(ellipse at 30% 30%,rgba(110,154,139,0.05) 0%,var(--bg) 60%)}
+body.sec-s3{background:radial-gradient(ellipse at 30% 30%,rgba(196,134,58,0.05) 0%,var(--bg) 60%)}
+body.sec-s4{background:radial-gradient(ellipse at 30% 30%,rgba(184,122,94,0.05) 0%,var(--bg) 60%)}
+body.sec-s5{background:radial-gradient(ellipse at 30% 30%,rgba(139,126,200,0.05) 0%,var(--bg) 60%)}
+
 /* ===== SLIDES BASE ===== */
 .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:60px 80px 60px;opacity:0;visibility:hidden;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.16,1,.3,1),opacity .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1)}
 .slide.active{opacity:1;visibility:visible}
@@ -323,6 +344,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 1: TITLE -->
 <div class="slide active" data-i="0" data-tr="tr-zoom">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -344,6 +366,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 2: AGENDA -->
 <div class="slide" data-i="1" data-tr="tr-fade">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1920&q=80')"></div>
 <div class="slide-inner">
 <h2 class="stg gtext stitle">Agenda</h2>
 <p class="stg ssub" style="margin-bottom:16px">What we will cover today</p>
@@ -364,6 +387,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 3: SECTION 1 DIVIDER -->
 <div class="slide" data-i="2" data-tr="tr-scale" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h2 class="stg gtext" style="font-size:2.6rem">What is Student-to-Future Leader?</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Habiba Mohamed</div>
@@ -372,6 +396,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 4: WHAT DOES IT MEAN -->
 <div class="slide" data-i="3" data-tr="tr-slide" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -386,6 +411,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 5: KEY IDEAS -->
 <div class="slide" data-i="4" data-tr="tr-up" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -406,6 +432,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 6: THE JOURNEY -->
 <div class="slide" data-i="5" data-tr="tr-rotate" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -430,6 +457,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 7: REAL-LIFE EXAMPLE -->
 <div class="slide" data-i="6" data-tr="tr-fade" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -447,6 +475,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 8: MAIN IDEA -->
 <div class="slide" data-i="7" data-tr="tr-zoom" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -467,6 +496,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 9: SECTION 2 DIVIDER -->
 <div class="slide" data-i="8" data-tr="tr-depth" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h2 class="stg gtext" style="font-size:2.6rem">Essential Leadership Skills</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Habiba Kamal</div>
@@ -475,6 +505,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 10: SKILLS OVERVIEW -->
 <div class="slide" data-i="9" data-tr="tr-slide" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1920&q=80')"></div>
 <div class="slide-inner">
 <h2 class="stg gtext stitle">Skills Overview</h2>
 <p class="stg ssub" style="margin-bottom:14px">The five pillars of effective student leadership</p>
@@ -490,6 +521,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 11: COMMUNICATION -->
 <div class="slide" data-i="10" data-tr="tr-up" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -510,6 +542,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 12: TEAMWORK -->
 <div class="slide" data-i="11" data-tr="tr-flip" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -530,6 +563,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 13: DECISION MAKING -->
 <div class="slide" data-i="12" data-tr="tr-rotate" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -550,6 +584,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 14: PROBLEM SOLVING -->
 <div class="slide" data-i="13" data-tr="tr-scale" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -570,6 +605,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 15: CONFIDENCE -->
 <div class="slide" data-i="14" data-tr="tr-fade" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -590,6 +626,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 16: SECTION 3 DIVIDER -->
 <div class="slide" data-i="15" data-tr="tr-zoom" data-section="s3">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h2 class="stg gtext" style="font-size:2.4rem">How to Become a Future Leader</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Mohamed Mostafa</div>
@@ -598,6 +635,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 17: TAKE INITIATIVE -->
 <div class="slide" data-i="16" data-tr="tr-slide" data-section="s3">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -618,6 +656,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 18: TEAMWORK & MOTIVATION -->
 <div class="slide" data-i="17" data-tr="tr-up" data-section="s3">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -638,6 +677,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 19: MISTAKES & LISTENING -->
 <div class="slide" data-i="18" data-tr="tr-depth" data-section="s3">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -658,6 +698,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 20: COMMUNICATION SKILLS -->
 <div class="slide" data-i="19" data-tr="tr-flip" data-section="s3">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -689,6 +730,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 21: SECTION 4 DIVIDER -->
 <div class="slide" data-i="20" data-tr="tr-rotate" data-section="s4">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h2 class="stg gtext" style="font-size:2.6rem">Challenges Students Face</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Roqia Wael</div>
@@ -697,6 +739,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 22: CHALLENGE 1 -->
 <div class="slide" data-i="21" data-tr="tr-zoom" data-section="s4">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -717,6 +760,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 23: CHALLENGE 2 -->
 <div class="slide" data-i="22" data-tr="tr-up" data-section="s4">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -737,6 +781,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 24: CHALLENGE 3 -->
 <div class="slide" data-i="23" data-tr="tr-fade" data-section="s4">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -757,6 +802,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 25: SECTION 5 DIVIDER -->
 <div class="slide" data-i="24" data-tr="tr-scale" data-section="s5">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h2 class="stg gtext" style="font-size:2.6rem">The Ripple Effect</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Farah Amr</div>
@@ -765,6 +811,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 26: INDIVIDUAL TRANSFORMATION -->
 <div class="slide" data-i="25" data-tr="tr-slide" data-section="s5">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -783,6 +830,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 27: TEAM DYNAMIC -->
 <div class="slide" data-i="26" data-tr="tr-depth" data-section="s5">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -801,6 +849,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 28: SOCIETAL IMPACT -->
 <div class="slide" data-i="27" data-tr="tr-rotate" data-section="s5">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -819,6 +868,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 29: KEY TAKEAWAYS -->
 <div class="slide" data-i="28" data-tr="tr-zoom" data-section="">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=80')"></div>
 <div class="slide-inner">
 <h2 class="stg gtext stitle">Key Takeaways</h2>
 <p class="stg ssub" style="margin-bottom:14px">What to remember from today presentation</p>
@@ -835,6 +885,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 30: THANK YOU -->
 <div class="slide" data-i="29" data-tr="tr-depth" data-section="">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h1 class="stg gtext" style="font-size:3.2rem">Thank You</h1>
 <p class="stg" style="font-size:1.1rem;color:var(--text-muted);margin-bottom:12px">The future belongs to those who lead today.</p>
@@ -909,6 +960,36 @@ else if(e.key==='f'||e.key==='F')toggleFS();
 let tx=0;
 document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
 document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)go(dx<0?1:-1)},{passive:true});
+
+/* ===== SCROLL / WHEEL NAVIGATION ===== */
+let wheelTimeout=null;
+document.addEventListener('wheel',e=>{
+e.preventDefault();
+if(wheelTimeout)return;
+wheelTimeout=setTimeout(()=>{wheelTimeout=null},800);
+if(e.deltaY>30)go(1);
+else if(e.deltaY<-30)go(-1);
+},{passive:false});
+
+/* ===== SECTION COLOR TRANSITIONS ===== */
+const sectionColors={
+'':'sec-intro',
+'s1':'sec-s1',
+'s2':'sec-s2',
+'s3':'sec-s3',
+'s4':'sec-s4',
+'s5':'sec-s5'
+};
+function updateSectionColor(){
+const sec=slides[cur].getAttribute('data-section')||'';
+document.body.className=sectionColors[sec]||'sec-intro';
+}
+const origGo=go;
+go=function(dir){
+origGo(dir);
+setTimeout(updateSectionColor,100);
+};
+updateSectionColor();
 
 function toggleFS(){
 if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});
