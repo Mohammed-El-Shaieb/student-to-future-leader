@@ -29,9 +29,9 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 .s5{--sec:#8b7ec8;--sec-light:#a89bde;--sec-dim:rgba(139,126,200,0.3);--sec-glow:rgba(139,126,200,0.15)}
 
 /* ===== 3D BACKGROUND CUBES ===== */
-.scene-3d{position:fixed;inset:0;z-index:0;overflow:hidden;perspective:1200px;background:var(--bg)}
-.cube-wire{position:absolute;transform-style:preserve-3d;opacity:.12}
-.cube-wire .face{position:absolute;border:1px solid var(--gold);background:transparent;backface-visibility:visible}
+.scene-3d{position:fixed;inset:0;z-index:0;overflow:hidden;perspective:1200px;background:radial-gradient(ellipse at 30% 20%,rgba(200,169,110,0.04) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(139,126,200,0.03) 0%,transparent 50%),var(--bg)}
+.cube-wire{position:absolute;transform-style:preserve-3d;opacity:.25}
+.cube-wire .face{position:absolute;border:1px solid rgba(200,169,110,0.35);background:rgba(200,169,110,0.02);backface-visibility:visible}
 .cube-wire.c1{width:180px;height:180px;top:8%;right:12%;animation:spin1 25s linear infinite}
 .cube-wire.c2{width:120px;height:120px;bottom:15%;left:8%;animation:spin2 30s linear infinite}
 .cube-wire.c3{width:90px;height:90px;top:55%;right:25%;animation:spin3 20s linear infinite}
@@ -51,25 +51,25 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 /* ===== 3D RING ===== */
 .ring3d{position:absolute;top:50%;left:50%;transform-style:preserve-3d;animation:ringSpin 12s linear infinite}
-.ring3d .ring-seg{position:absolute;width:320px;height:320px;border:2px solid rgba(200,169,110,0.08);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
+.ring3d .ring-seg{position:absolute;width:320px;height:320px;border:2px solid rgba(200,169,110,0.2);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
 @keyframes ringSpin{from{transform:rotateX(70deg) rotateY(0deg) translate(-50%,-50%)}to{transform:rotateX(70deg) rotateY(360deg) translate(-50%,-50%)}}
 
 /* ===== 3D PYRAMID ===== */
-.pyramid3d{position:absolute;width:140px;height:140px;transform-style:preserve-3d;animation:pyrFloat 16s ease-in-out infinite;opacity:.1}
-.pyramid3d .tri{position:absolute;width:0;height:0;border-left:70px solid transparent;border-right:70px solid transparent;border-bottom:121px solid rgba(200,169,110,0.06);transform-origin:bottom center;backface-visibility:visible}
+.pyramid3d{position:absolute;width:140px;height:140px;transform-style:preserve-3d;animation:pyrFloat 16s ease-in-out infinite;opacity:.25}
+.pyramid3d .tri{position:absolute;width:0;height:0;border-left:70px solid transparent;border-right:70px solid transparent;border-bottom:121px solid rgba(200,169,110,0.18);transform-origin:bottom center;backface-visibility:visible}
 .pyramid3d .tri:nth-child(1){transform:rotateX(19.47deg) translateY(-40px)}
 .pyramid3d .tri:nth-child(2){transform:rotateY(90deg) rotateX(19.47deg) translateY(-40px)}
 .pyramid3d .tri:nth-child(3){transform:rotateY(180deg) rotateX(19.47deg) translateY(-40px)}
 .pyramid3d .tri:nth-child(4){transform:rotateY(270deg) rotateX(19.47deg) translateY(-40px)}
-.pyramid3d .base{position:absolute;width:140px;height:140px;border:1px solid rgba(200,169,110,0.05);transform:rotateX(90deg) translateZ(-60px);top:0;left:0}
+.pyramid3d .base{position:absolute;width:140px;height:140px;border:1px solid rgba(200,169,110,0.15);transform:rotateX(90deg) translateZ(-60px);top:0;left:0}
 @keyframes pyrFloat{0%{transform:translateY(0) rotateY(0deg) rotateX(15deg)}25%{transform:translateY(-20px) rotateY(90deg) rotateX(20deg)}50%{transform:translateY(0) rotateY(180deg) rotateX(15deg)}75%{transform:translateY(20px) rotateY(270deg) rotateX(10deg)}100%{transform:translateY(0) rotateY(360deg) rotateX(15deg)}}
 
 /* ===== 3D GRID FLOOR ===== */
-.grid3d{position:absolute;bottom:0;left:0;right:0;height:45%;perspective:600px;overflow:hidden;opacity:.06}
-.grid3d-inner{position:absolute;inset:0;transform:rotateX(65deg);transform-origin:bottom center;background-image:repeating-linear-gradient(90deg,rgba(200,169,110,0.4) 0px,rgba(200,169,110,0.4) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(0deg,rgba(200,169,110,0.4) 0px,rgba(200,169,110,0.4) 1px,transparent 1px,transparent 60px);background-size:60px 60px;animation:gridScroll 8s linear infinite}
+.grid3d{position:absolute;bottom:0;left:0;right:0;height:45%;perspective:600px;overflow:hidden;opacity:.18}
+.grid3d-inner{position:absolute;inset:0;transform:rotateX(65deg);transform-origin:bottom center;background-image:repeating-linear-gradient(90deg,rgba(200,169,110,0.6) 0px,rgba(200,169,110,0.6) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(0deg,rgba(200,169,110,0.6) 0px,rgba(200,169,110,0.6) 1px,transparent 1px,transparent 60px);background-size:60px 60px;animation:gridScroll 8s linear infinite}
 @keyframes gridScroll{from{background-position:0 0}to{background-position:0 60px}}
 
-.glow-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.08;will-change:transform}
+.glow-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.15;will-change:transform}
 .glow-orb.g1{width:50vw;height:50vw;top:-10%;left:-5%;background:radial-gradient(circle,var(--gold),transparent 70%);animation:gdrift1 22s ease-in-out infinite alternate}
 .glow-orb.g2{width:40vw;height:40vw;bottom:-15%;right:-5%;background:radial-gradient(circle,var(--accent),transparent 70%);animation:gdrift2 28s ease-in-out infinite alternate}
 @keyframes gdrift1{0%{transform:translate(0,0)}50%{transform:translate(6%,8%)}100%{transform:translate(-4%,5%)}}
@@ -259,8 +259,8 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 <!-- 3D RING -->
 <div class="ring3d">
 <div class="ring-seg"></div>
-<div class="ring-seg" style="width:260px;height:260px;border-color:rgba(200,169,110,0.05)"></div>
-<div class="ring-seg" style="width:200px;height:200px;border-color:rgba(200,169,110,0.03)"></div>
+<div class="ring-seg" style="width:260px;height:260px;border-color:rgba(200,169,110,0.15)"></div>
+<div class="ring-seg" style="width:200px;height:200px;border-color:rgba(200,169,110,0.1)"></div>
 </div>
 
 <!-- 3D PYRAMID -->
@@ -898,6 +898,70 @@ if(d<100){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(p
 requestAnimationFrame(animate);
 }
 animate();
+
+/* ===== MOUSE PARALLAX on 3D scene ===== */
+const scene3d=document.querySelector('.scene-3d');
+let mx=0,my=0,tmx=0,tmy=0;
+document.addEventListener('mousemove',e=>{
+tmx=(e.clientX/window.innerWidth-.5)*2;
+tmy=(e.clientY/window.innerHeight-.5)*2;
+});
+(function parallax(){
+mx+=(tmx-mx)*.06;
+my+=(tmy-my)*.06;
+const cubes=scene3d.querySelectorAll('.cube-wire');
+cubes.forEach((c,i)=>{
+const depth=(i+1)*8;
+c.style.transform=c.style.transform||'';
+c.style.setProperty('--px',mx*depth+'px');
+c.style.setProperty('--py',my*depth+'px');
+});
+const ring=scene3d.querySelector('.ring3d');
+if(ring)ring.style.filter=`drop-shadow(${mx*12}px ${my*12}px 20px rgba(200,169,110,0.15))`;
+const pyr=scene3d.querySelector('.pyramid3d');
+if(pyr)pyr.style.filter=`drop-shadow(${mx*-10}px ${my*-10}px 15px rgba(200,169,110,0.12))`;
+requestAnimationFrame(parallax);
+})();
+
+/* ===== CLICK RIPPLE ===== */
+document.addEventListener('click',e=>{
+const rip=document.createElement('div');
+rip.style.cssText=`position:fixed;left:${e.clientX}px;top:${e.clientY}px;width:0;height:0;border-radius:50%;border:2px solid rgba(200,169,110,0.4);transform:translate(-50%,-50%);pointer-events:none;z-index:9999;transition:all .8s cubic-bezier(.16,1,.3,1)`;
+document.body.appendChild(rip);
+requestAnimationFrame(()=>{rip.style.width='120px';rip.style.height='120px';rip.style.opacity='0'});
+setTimeout(()=>rip.remove(),800);
+});
+
+/* ===== CURSOR GLOW ===== */
+const cursorGlow=document.createElement('div');
+cursorGlow.style.cssText=`position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);transition:left .15s ease-out,top .15s ease-out`;
+document.body.appendChild(cursorGlow);
+document.addEventListener('mousemove',e=>{cursorGlow.style.left=e.clientX+'px';cursorGlow.style.top=e.clientY+'px'});
+
+/* ===== CARD HOVER RIPPLE ===== */
+document.querySelectorAll('.scard,.rcard,.tkcard,.glass').forEach(card=>{
+card.addEventListener('mouseenter',e=>{
+const rect=card.getBoundingClientRect();
+const x=e.clientX-rect.left;const y=e.clientY-rect.top;
+const ripple=document.createElement('div');
+ripple.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:0;height:0;border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,0.1) 0%,transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:0;transition:all .6s ease`;
+card.style.position='relative';
+card.appendChild(ripple);
+requestAnimationFrame(()=>{ripple.style.width='300px';ripple.style.height='300px';ripple.style.opacity='0'});
+setTimeout(()=>ripple.remove(),600);
+});
+});
+
+/* ===== SLIDE COUNTER PULSE on change ===== */
+const counterEl=document.getElementById('counter');
+const origUpdateUI=updateUI;
+updateUI=function(){
+origUpdateUI();
+counterEl.style.transform='scale(1.3)';
+counterEl.style.color='var(--gold)';
+setTimeout(()=>{counterEl.style.transform='scale(1)';counterEl.style.color=''},300);
+};
+counterEl.style.transition='transform .3s cubic-bezier(.34,1.56,.64,1),color .3s';
 
 updateUI();
 </script>
