@@ -28,8 +28,28 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 .s4{--sec:#b87a5e;--sec-light:#d09478;--sec-dim:rgba(184,122,94,0.3);--sec-glow:rgba(184,122,94,0.15)}
 .s5{--sec:#8b7ec8;--sec-light:#a89bde;--sec-dim:rgba(139,126,200,0.3);--sec-glow:rgba(139,126,200,0.15)}
 
+/* ===== VIDEO BACKGROUND ===== */
+.video-bg{position:fixed;inset:0;z-index:0;overflow:hidden}
+.video-bg video{width:100%;height:100%;object-fit:cover;opacity:.2;filter:saturate(.3) brightness(.5);transition:opacity 2s ease}
+@keyframes videoHue{0%{filter:saturate(.4) brightness(.7) hue-rotate(0deg)}50%{filter:saturate(.5) brightness(.75) hue-rotate(15deg)}100%{filter:saturate(.4) brightness(.7) hue-rotate(0deg)}}
+.video-bg video.loaded{opacity:.35}
+.video-overlay{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(14,13,11,.1) 0%,rgba(14,13,11,.3) 60%,rgba(14,13,11,.5) 100%);pointer-events:none}
+@keyframes overlayPulse{0%{opacity:.85}50%{opacity:.92}100%{opacity:.85}}
+
+/* ===== CSS ANIMATED BLOBS ===== */
+.anim-layer{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.ablob{position:absolute;border-radius:50%;filter:blur(80px);mix-blend-mode:screen;will-change:transform}
+.ab1{width:500px;height:500px;top:-10%;left:10%;background:radial-gradient(circle,rgba(200,169,110,0.1),transparent 70%);animation:abFloat1 18s ease-in-out infinite alternate}
+.ab2{width:400px;height:400px;bottom:5%;right:15%;background:radial-gradient(circle,rgba(110,154,139,0.08),transparent 70%);animation:abFloat2 22s ease-in-out infinite alternate}
+.ab3{width:350px;height:350px;top:40%;left:60%;background:radial-gradient(circle,rgba(139,126,200,0.06),transparent 70%);animation:abFloat3 25s ease-in-out infinite alternate}
+.ab4{width:300px;height:300px;top:20%;left:40%;background:radial-gradient(circle,rgba(196,134,58,0.06),transparent 70%);animation:abFloat4 20s ease-in-out infinite alternate}
+@keyframes abFloat1{0%{transform:translate(0,0) scale(1)}33%{transform:translate(80px,60px) scale(1.15)}66%{transform:translate(-40px,100px) scale(.9)}100%{transform:translate(50px,-30px) scale(1.08)}}
+@keyframes abFloat2{0%{transform:translate(0,0) scale(1)}33%{transform:translate(-70px,-50px) scale(1.1)}66%{transform:translate(60px,-80px) scale(.85)}100%{transform:translate(-30px,40px) scale(1.05)}}
+@keyframes abFloat3{0%{transform:translate(0,0) scale(1)}50%{transform:translate(100px,30px) scale(1.2)}100%{transform:translate(-50px,-60px) scale(.95)}}
+@keyframes abFloat4{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-80px,80px) scale(1.1)}100%{transform:translate(60px,-40px) scale(.9)}}
+
 /* ===== 3D BACKGROUND CUBES ===== */
-.scene-3d{position:fixed;inset:0;z-index:0;overflow:hidden;perspective:1200px;background:radial-gradient(ellipse at 30% 20%,rgba(200,169,110,0.06) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(139,126,200,0.05) 0%,transparent 50%),var(--bg)}
+.scene-3d{position:fixed;inset:0;z-index:0;overflow:hidden;perspective:1200px;background:transparent}
 .cube-wire{position:absolute;transform-style:preserve-3d;opacity:.45}
 .cube-wire .face{position:absolute;border:1.5px solid rgba(200,169,110,0.5);background:rgba(200,169,110,0.04);backface-visibility:visible}
 .cube-wire.c1{width:240px;height:240px;top:5%;right:8%;animation:spin1 20s linear infinite}
@@ -85,6 +105,27 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 #counter{color:var(--text-dim);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
 #particles{position:fixed;inset:0;z-index:1;pointer-events:none}
 .pres{width:100%;height:100%;position:relative;z-index:2;perspective:1400px}
+
+/* ===== SLIDE BACKGROUNDS ===== */
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:60px 80px 60px;opacity:0;visibility:hidden;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.16,1,.3,1),opacity .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1);overflow:hidden}
+.slide-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;filter:saturate(.8) brightness(.7);animation:kenBurns 20s ease-in-out infinite alternate;opacity:.85}
+@keyframes kenBurns{0%{transform:scale(1.05) translate(0,0)}100%{transform:scale(1.15) translate(-1%,1%)}}
+.slide-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,13,11,.2) 0%,rgba(14,13,11,.5) 50%,rgba(14,13,11,.8) 100%)}
+.slide.active .slide-bg{animation:kenBurns 20s ease-in-out infinite alternate}
+.slide:not(.active) .slide-bg{animation:none;transform:scale(1.1)}
+
+/* ===== KEN BURNS ON IMAGES ===== */
+.col-img img{animation:imgKen 15s ease-in-out infinite alternate}
+@keyframes imgKen{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.05) translate(-1%,1%)}}
+
+/* ===== SECTION COLOR TRANSITIONS ===== */
+body{transition:background 1.5s ease}
+body.sec-intro{background:radial-gradient(ellipse at 30% 30%,rgba(200,169,110,0.06) 0%,var(--bg) 60%)}
+body.sec-s1{background:radial-gradient(ellipse at 30% 30%,rgba(200,169,110,0.06) 0%,var(--bg) 60%)}
+body.sec-s2{background:radial-gradient(ellipse at 30% 30%,rgba(110,154,139,0.05) 0%,var(--bg) 60%)}
+body.sec-s3{background:radial-gradient(ellipse at 30% 30%,rgba(196,134,58,0.05) 0%,var(--bg) 60%)}
+body.sec-s4{background:radial-gradient(ellipse at 30% 30%,rgba(184,122,94,0.05) 0%,var(--bg) 60%)}
+body.sec-s5{background:radial-gradient(ellipse at 30% 30%,rgba(139,126,200,0.05) 0%,var(--bg) 60%)}
 
 /* ===== SLIDES BASE ===== */
 .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:60px 80px 60px;opacity:0;visibility:hidden;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.16,1,.3,1),opacity .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1)}
@@ -231,10 +272,33 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 .slide{padding:50px 24px 60px}
 .stitle{font-size:1.6rem}
 .cube-wire{display:none}
+.video-bg video{display:none}
+.video-bg{background:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=80') center/cover no-repeat;opacity:.15}
+}
+@media(prefers-reduced-motion:reduce){
+.video-bg video{display:none}
+.ablob{animation:none!important}
 }
 </style>
 </head>
 <body>
+
+<!-- VIDEO BACKGROUND -->
+<div class="video-bg" id="videoBg">
+<video autoplay loop muted playsinline id="bgVideo" poster="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=80">
+<source src="https://videos.pexels.com/video-files/3191887/3191887-hd_1920_1080_25fps.mp4" type="video/mp4">
+<source src="https://videos.pexels.com/video-files/3201568/3201568-hd_1920_1080_25fps.mp4" type="video/mp4">
+</video>
+</div>
+<div class="video-overlay"></div>
+
+<!-- CSS ANIMATED BLOBS -->
+<div class="anim-layer">
+<div class="ablob ab1"></div>
+<div class="ablob ab2"></div>
+<div class="ablob ab3"></div>
+<div class="ablob ab4"></div>
+</div>
 
 <div class="scene-3d">
 <div class="glow-orb g1"></div>
@@ -280,6 +344,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 1: TITLE -->
 <div class="slide active" data-i="0" data-tr="tr-zoom">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -301,6 +366,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 2: AGENDA -->
 <div class="slide" data-i="1" data-tr="tr-fade">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1920&q=80')"></div>
 <div class="slide-inner">
 <h2 class="stg gtext stitle">Agenda</h2>
 <p class="stg ssub" style="margin-bottom:16px">What we will cover today</p>
@@ -321,6 +387,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 3: SECTION 1 DIVIDER -->
 <div class="slide" data-i="2" data-tr="tr-scale" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h2 class="stg gtext" style="font-size:2.6rem">What is Student-to-Future Leader?</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Habiba Mohamed</div>
@@ -329,6 +396,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 4: WHAT DOES IT MEAN -->
 <div class="slide" data-i="3" data-tr="tr-slide" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -343,6 +411,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 5: KEY IDEAS -->
 <div class="slide" data-i="4" data-tr="tr-up" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -363,6 +432,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 6: THE JOURNEY -->
 <div class="slide" data-i="5" data-tr="tr-rotate" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -387,6 +457,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 7: REAL-LIFE EXAMPLE -->
 <div class="slide" data-i="6" data-tr="tr-fade" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -404,6 +475,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 8: MAIN IDEA -->
 <div class="slide" data-i="7" data-tr="tr-zoom" data-section="s1">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -424,6 +496,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 9: SECTION 2 DIVIDER -->
 <div class="slide" data-i="8" data-tr="tr-depth" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h2 class="stg gtext" style="font-size:2.6rem">Essential Leadership Skills</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Habiba Kamal</div>
@@ -432,6 +505,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 10: SKILLS OVERVIEW -->
 <div class="slide" data-i="9" data-tr="tr-slide" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1920&q=80')"></div>
 <div class="slide-inner">
 <h2 class="stg gtext stitle">Skills Overview</h2>
 <p class="stg ssub" style="margin-bottom:14px">The five pillars of effective student leadership</p>
@@ -447,6 +521,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 11: COMMUNICATION -->
 <div class="slide" data-i="10" data-tr="tr-up" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -467,6 +542,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 12: TEAMWORK -->
 <div class="slide" data-i="11" data-tr="tr-flip" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -487,6 +563,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 13: DECISION MAKING -->
 <div class="slide" data-i="12" data-tr="tr-rotate" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -507,6 +584,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 14: PROBLEM SOLVING -->
 <div class="slide" data-i="13" data-tr="tr-scale" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -527,6 +605,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 15: CONFIDENCE -->
 <div class="slide" data-i="14" data-tr="tr-fade" data-section="s2">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -547,6 +626,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 16: SECTION 3 DIVIDER -->
 <div class="slide" data-i="15" data-tr="tr-zoom" data-section="s3">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h2 class="stg gtext" style="font-size:2.4rem">How to Become a Future Leader</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Mohamed Mostafa</div>
@@ -555,6 +635,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 17: TAKE INITIATIVE -->
 <div class="slide" data-i="16" data-tr="tr-slide" data-section="s3">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -575,6 +656,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 18: TEAMWORK & MOTIVATION -->
 <div class="slide" data-i="17" data-tr="tr-up" data-section="s3">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -595,6 +677,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 19: MISTAKES & LISTENING -->
 <div class="slide" data-i="18" data-tr="tr-depth" data-section="s3">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -615,6 +698,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 20: COMMUNICATION SKILLS -->
 <div class="slide" data-i="19" data-tr="tr-flip" data-section="s3">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -646,6 +730,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 21: SECTION 4 DIVIDER -->
 <div class="slide" data-i="20" data-tr="tr-rotate" data-section="s4">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h2 class="stg gtext" style="font-size:2.6rem">Challenges Students Face</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Roqia Wael</div>
@@ -654,6 +739,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 22: CHALLENGE 1 -->
 <div class="slide" data-i="21" data-tr="tr-zoom" data-section="s4">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -674,6 +760,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 23: CHALLENGE 2 -->
 <div class="slide" data-i="22" data-tr="tr-up" data-section="s4">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -694,6 +781,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 24: CHALLENGE 3 -->
 <div class="slide" data-i="23" data-tr="tr-fade" data-section="s4">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -714,6 +802,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 25: SECTION 5 DIVIDER -->
 <div class="slide" data-i="24" data-tr="tr-scale" data-section="s5">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h2 class="stg gtext" style="font-size:2.6rem">The Ripple Effect</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Farah Amr</div>
@@ -722,6 +811,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 26: INDIVIDUAL TRANSFORMATION -->
 <div class="slide" data-i="25" data-tr="tr-slide" data-section="s5">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -740,6 +830,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 27: TEAM DYNAMIC -->
 <div class="slide" data-i="26" data-tr="tr-depth" data-section="s5">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -758,6 +849,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 28: SOCIETAL IMPACT -->
 <div class="slide" data-i="27" data-tr="tr-rotate" data-section="s5">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&q=80')"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -776,6 +868,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 29: KEY TAKEAWAYS -->
 <div class="slide" data-i="28" data-tr="tr-zoom" data-section="">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=80')"></div>
 <div class="slide-inner">
 <h2 class="stg gtext stitle">Key Takeaways</h2>
 <p class="stg ssub" style="margin-bottom:14px">What to remember from today presentation</p>
@@ -792,6 +885,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 <!-- SLIDE 30: THANK YOU -->
 <div class="slide" data-i="29" data-tr="tr-depth" data-section="">
+<div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80')"></div>
 <div class="slide-inner divider">
 <h1 class="stg gtext" style="font-size:3.2rem">Thank You</h1>
 <p class="stg" style="font-size:1.1rem;color:var(--text-muted);margin-bottom:12px">The future belongs to those who lead today.</p>
@@ -867,34 +961,267 @@ let tx=0;
 document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
 document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)go(dx<0?1:-1)},{passive:true});
 
+/* ===== SCROLL / WHEEL NAVIGATION ===== */
+let wheelTimeout=null;
+document.addEventListener('wheel',e=>{
+e.preventDefault();
+if(wheelTimeout)return;
+wheelTimeout=setTimeout(()=>{wheelTimeout=null},800);
+if(e.deltaY>30)go(1);
+else if(e.deltaY<-30)go(-1);
+},{passive:false});
+
+/* ===== SECTION COLOR TRANSITIONS ===== */
+const sectionColors={
+'':'sec-intro',
+'s1':'sec-s1',
+'s2':'sec-s2',
+'s3':'sec-s3',
+'s4':'sec-s4',
+'s5':'sec-s5'
+};
+function updateSectionColor(){
+const sec=slides[cur].getAttribute('data-section')||'';
+document.body.className=sectionColors[sec]||'sec-intro';
+}
+const origGo=go;
+go=function(dir){
+origGo(dir);
+setTimeout(updateSectionColor,100);
+};
+updateSectionColor();
+
 function toggleFS(){
 if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});
 else document.exitFullscreen();
 }
 
 const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
-let W,H,particles=[];
+let W,H;
 function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
 window.addEventListener('resize',resize);resize();
 
-class Particle{
-constructor(){this.reset()}
-reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.25;this.vy=(Math.random()-.5)*.25;this.r=Math.random()*1.2+.4;this.a=Math.random()*.2+.08}
-update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1}
-draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(200,169,110,${this.a})`;ctx.fill()}
+/* ===== VIDEO BACKGROUND HANDLER ===== */
+const bgVideo=document.getElementById('bgVideo');
+if(bgVideo){
+bgVideo.addEventListener('canplay',()=>{bgVideo.classList.add('loaded')});
+bgVideo.addEventListener('error',()=>{bgVideo.style.display='none'});
 }
 
-for(let i=0;i<40;i++)particles.push(new Particle());
+let mouseX=W/2,mouseY=H/2,pmouseX=mouseX,pmouseY=mouseY;
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});
 
+/* ===== SYSTEM 1: NEURAL NETWORK CONSTELLATION ===== */
+const nodes=[];
+const NODE_COUNT=70;
+const CONNECT_DIST=160;
+const NODE_COLORS=['rgba(200,169,110,','rgba(110,154,139,','rgba(196,134,58,','rgba(139,126,200,'];
+
+class Node{
+constructor(){
+this.x=Math.random()*W;this.y=Math.random()*H;
+this.vx=(Math.random()-.5)*.6;this.vy=(Math.random()-.5)*.6;
+this.r=Math.random()*2.5+.8;
+this.colorIdx=Math.floor(Math.random()*NODE_COLORS.length);
+this.pulse=Math.random()*Math.PI*2;
+this.pulseSpeed=.02+Math.random()*.02;
+this.energy=0;
+}
+update(){
+this.pulse+=this.pulseSpeed;
+const dx=mouseX-this.x,dy=mouseY-this.y,dist=Math.sqrt(dx*dx+dy*dy);
+if(dist<200){
+const force=(200-dist)/200*.8;
+this.vx+=dx/dist*force*.15;
+this.vy+=dy/dist*force*.15;
+this.energy=Math.min(this.energy+.05,1);
+}else{this.energy*=.97}
+this.vx*=.99;this.vy*=.99;
+this.x+=this.vx;this.y+=this.vy;
+if(this.x<0||this.x>W)this.vx*=-1;
+if(this.y<0||this.y>H)this.vy*=-1;
+}
+draw(){
+const pulseA=Math.sin(this.pulse)*.3+.7;
+const a=(.3+this.energy*.5)*pulseA;
+const r=this.r+this.energy*2;
+ctx.beginPath();ctx.arc(this.x,this.y,r,0,Math.PI*2);
+ctx.fillStyle=NODE_COLORS[this.colorIdx]+a+')';ctx.fill();
+if(this.energy>.3){
+ctx.beginPath();ctx.arc(this.x,this.y,r+4,0,Math.PI*2);
+ctx.fillStyle=NODE_COLORS[this.colorIdx]+(this.energy*.15)+')';ctx.fill();
+}
+}
+}
+
+for(let i=0;i<NODE_COUNT;i++)nodes.push(new Node());
+
+/* ===== SYSTEM 2: FLOATING KEYWORDS ===== */
+const keywords=['Leadership','Growth','Initiative','Teamwork','Vision','Skills','Innovation','Resilience','Future','Impact','Courage','Trust','Vision','Empower','Inspire'];
+const floatingWords=[];
+class FloatingWord{
+constructor(){
+this.text=keywords[Math.floor(Math.random()*keywords.length)];
+this.x=Math.random()*W;this.y=Math.random()*H;
+this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.15;
+this.size=10+Math.random()*8;this.alpha=0;this.maxAlpha=.06+Math.random()*.04;
+this.life=0;this.maxLife=300+Math.random()*400;
+this.angle=Math.random()*.3-.15;
+}
+update(){
+this.life++;this.x+=this.vx;this.y+=this.vy;
+const t=this.life/this.maxAlpha;
+if(this.life<60)this.alpha=this.maxAlpha*(this.life/60);
+else if(this.life>this.maxLife-60)this.alpha=this.maxAlpha*((this.maxLife-this.life)/60);
+else this.alpha=this.maxAlpha;
+if(this.life>=this.maxLife){this.life=0;this.x=Math.random()*W;this.y=Math.random()*H}
+}
+draw(){
+if(this.alpha<=0)return;
+ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.angle);
+ctx.font=`300 ${this.size}px "Poppins",sans-serif`;
+ctx.fillStyle=`rgba(200,169,110,${this.alpha})`;
+ctx.textAlign='center';ctx.fillText(this.text,0,0);
+ctx.restore();
+}
+}
+for(let i=0;i<15;i++)floatingWords.push(new FloatingWord());
+
+/* ===== SYSTEM 3: WAVE MESH ===== */
+const wavePoints=[];
+const WAVE_COLS=25;const WAVE_ROWS=8;
+for(let i=0;i<WAVE_COLS;i++){
+wavePoints[i]=[];
+for(let j=0;j<WAVE_ROWS;j++){
+wavePoints[i][j]={x:0,y:0,baseX:0,baseY:0};
+}
+}
+let waveTime=0;
+
+function drawWaveMesh(){
+waveTime+=.015;
+const spacingX=W/(WAVE_COLS-1);
+const spacingY=120;
+const startY=H*.7;
+for(let i=0;i<WAVE_COLS;i++){
+for(let j=0;j<WAVE_ROWS;j++){
+const bx=i*spacingX;
+const by=startY+j*spacingY;
+const wave1=Math.sin(i*.3+waveTime*2)*15;
+const wave2=Math.cos(j*.5+waveTime*1.5)*8;
+const mouseDist=Math.sqrt((mouseX-bx)**2+(mouseY-by)**2);
+const mouseInfluence=Math.max(0,1-mouseDist/250)*30;
+wavePoints[i][j].baseX=bx;wavePoints[i][j].baseY=by;
+wavePoints[i][j].x=bx+wave1+mouseInfluence*(mouseX>bx?.3:-.3);
+wavePoints[i][j].y=by+wave2+mouseInfluence*(mouseY>by?.3:-.3);
+}
+}
+for(let i=0;i<WAVE_COLS-1;i++){
+for(let j=0;j<WAVE_ROWS-1;j++){
+const p1=wavePoints[i][j],p2=wavePoints[i+1][j],p3=wavePoints[i][j+1];
+const alpha=.03+Math.sin(waveTime+i*.2)*.015;
+ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.lineTo(p2.x,wavePoints[i+1][j+1].y);ctx.lineTo(p3.x,p3.y);ctx.closePath();
+ctx.strokeStyle=`rgba(200,169,110,${alpha})`;ctx.lineWidth=.8;ctx.stroke();
+}
+}
+for(let i=0;i<WAVE_COLS;i++){
+for(let j=0;j<WAVE_ROWS;j++){
+const p=wavePoints[i][j];
+ctx.beginPath();ctx.arc(p.x,p.y,1.5,0,Math.PI*2);
+ctx.fillStyle=`rgba(200,169,110,${.08+Math.sin(waveTime+i*.5)*.03})`;ctx.fill();
+}
+}
+}
+
+/* ===== SYSTEM 4: ORBITING RINGS ===== */
+const orbits=[
+{cx:W*.15,cy:H*.3,rx:120,ry:40,speed:.008,color:'rgba(200,169,110,0.08)',dots:30,angle:0},
+{cx:W*.85,cy:H*.65,rx:100,ry:35,speed:-.01,color:'rgba(110,154,139,0.06)',dots:25,angle:0},
+{cx:W*.5,cy:H*.2,rx:150,ry:50,speed:.006,color:'rgba(139,126,200,0.05)',dots:35,angle:Math.PI/3},
+];
+
+function drawOrbits(){
+orbits.forEach(o=>{
+o.angle+=o.speed;
+const mouseDist=Math.sqrt((mouseX-o.cx)**2+(mouseY-o.cy)**2);
+const mousePull=Math.max(0,1-mouseDist/300)*.3;
+for(let i=0;i<o.dots;i++){
+const a=(Math.PI*2/o.dots)*i+o.angle;
+const pullX=(mouseX-o.cx)*mousePull*.1;
+const pullY=(mouseY-o.cy)*mousePull*.1;
+const x=o.cx+Math.cos(a)*o.rx+pullX;
+const y=o.cy+Math.sin(a)*o.ry+pullY;
+const dotAlpha=.3+Math.sin(a+o.angle*2)*.2;
+ctx.beginPath();ctx.arc(x,y,1.2+Math.sin(a*3)*.5,0,Math.PI*2);
+ctx.fillStyle=o.color.replace(/[\d.]+\)$/,dotAlpha+')');ctx.fill();
+}
+ctx.beginPath();ctx.ellipse(o.cx,o.cy,o.rx,o.ry,0,0,Math.PI*2);
+ctx.strokeStyle=o.color;ctx.lineWidth=.5;ctx.stroke();
+});
+}
+
+/* ===== SYSTEM 5: ENERGY BURST ON CLICK ===== */
+const bursts=[];
+document.addEventListener('click',e=>{
+for(let i=0;i<20;i++){
+const a=Math.PI*2/20*i;
+const speed=2+Math.random()*4;
+bursts.push({x:e.clientX,y:e.clientY,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,life:1,r:1.5+Math.random()*2});
+}
+});
+
+function drawBursts(){
+for(let i=bursts.length-1;i>=0;i--){
+const b=bursts[i];
+b.x+=b.vx;b.y+=b.vy;b.vx*=.96;b.vy*=.96;b.life-=.025;
+if(b.life<=0){bursts.splice(i,1);continue}
+ctx.beginPath();ctx.arc(b.x,b.y,b.r*b.life,0,Math.PI*2);
+ctx.fillStyle=`rgba(200,169,110,${b.life*.6})`;ctx.fill();
+}
+}
+
+/* ===== MAIN ANIMATION LOOP ===== */
 function animate(){
 ctx.clearRect(0,0,W,H);
-particles.forEach(p=>{p.update();p.draw()});
-for(let i=0;i<particles.length;i++){
-for(let j=i+1;j<particles.length;j++){
-const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
-if(d<100){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(200,169,110,${.06*(1-d/100)})`;ctx.stroke()}
+
+/* Wave mesh first (background layer) */
+drawWaveMesh();
+
+/* Orbiting rings */
+drawOrbits();
+
+/* Neural network connections */
+for(let i=0;i<nodes.length;i++){
+nodes[i].update();nodes[i].draw();
+for(let j=i+1;j<nodes.length;j++){
+const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);
+if(d<CONNECT_DIST){
+const a=(1-d/CONNECT_DIST)*.12*(.5+nodes[i].energy*.5+nodes[j].energy*.5);
+ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);
+ctx.strokeStyle=`rgba(200,169,110,${a})`;ctx.lineWidth=.6;ctx.stroke();
 }
 }
+/* Mouse connections */
+const mdx=mouseX-nodes[i].x,mdy=mouseY-nodes[i].y,md=Math.sqrt(mdx*mdx+mdy*mdy);
+if(md<200){
+const a=(1-md/200)*.15;
+ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(mouseX,mouseY);
+ctx.strokeStyle=`rgba(200,169,110,${a})`;ctx.lineWidth=.8;ctx.stroke();
+}
+}
+
+/* Floating keywords */
+floatingWords.forEach(w=>{w.update();w.draw()});
+
+/* Energy bursts */
+drawBursts();
+
+/* Mouse glow on canvas */
+const grad=ctx.createRadialGradient(mouseX,mouseY,0,mouseX,mouseY,150);
+grad.addColorStop(0,'rgba(200,169,110,0.04)');grad.addColorStop(1,'transparent');
+ctx.fillStyle=grad;ctx.fillRect(mouseX-150,mouseY-150,300,300);
+
+pmouseX=mouseX;pmouseY=mouseY;
 requestAnimationFrame(animate);
 }
 animate();
