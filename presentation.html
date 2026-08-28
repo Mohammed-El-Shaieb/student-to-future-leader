@@ -1028,13 +1028,15 @@ highlightMap();
 }
 
 function highlightMap(){
+if(!minimapGrid)return;
 const cells=minimapGrid.querySelectorAll('.map-cell');
 cells.forEach((c,i)=>{c.classList.toggle('cur',i===cur)});
 }
 
-function openMap(){buildMap();minimap.classList.add('show');minimapBack.classList.add('show');document.body.style.overflow='hidden'}
-function closeMap(){minimap.classList.remove('show');minimapBack.classList.remove('show');document.body.style.overflow=''}
+function openMap(){if(!minimap||!minimapBack)return;buildMap();minimap.classList.add('show');minimapBack.classList.add('show');document.body.style.overflow='hidden'}
+function closeMap(){if(!minimap||!minimapBack)return;minimap.classList.remove('show');minimapBack.classList.remove('show');document.body.style.overflow=''}
 function toggleMap(){
+if(!minimap)return;
 if(minimap.classList.contains('show'))closeMap();
 else openMap();
 }
