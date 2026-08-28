@@ -30,18 +30,19 @@ h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
 /* ===== VIDEO BACKGROUND ===== */
 .video-bg{position:fixed;inset:0;z-index:0;overflow:hidden}
-.video-bg video{width:100%;height:100%;object-fit:cover;opacity:.18;filter:saturate(.3) brightness(.6);transition:opacity 2s ease}
-.video-bg video.loaded{opacity:.18}
-.video-overlay{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(14,13,11,.55) 0%,rgba(14,13,11,.85) 60%,rgba(14,13,11,.95) 100%);pointer-events:none;animation:overlayPulse 8s ease-in-out infinite alternate}
+.video-bg video{width:100%;height:100%;object-fit:cover;opacity:.35;filter:saturate(.4) brightness(.7) hue-rotate(0deg);transition:opacity 2s ease;animation:videoHue 30s linear infinite}
+@keyframes videoHue{0%{filter:saturate(.4) brightness(.7) hue-rotate(0deg)}50%{filter:saturate(.5) brightness(.75) hue-rotate(15deg)}100%{filter:saturate(.4) brightness(.7) hue-rotate(0deg)}}
+.video-bg video.loaded{opacity:.35}
+.video-overlay{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(14,13,11,.35) 0%,rgba(14,13,11,.7) 60%,rgba(14,13,11,.88) 100%);pointer-events:none;animation:overlayPulse 8s ease-in-out infinite alternate}
 @keyframes overlayPulse{0%{opacity:.85}50%{opacity:.92}100%{opacity:.85}}
 
 /* ===== CSS ANIMATED BLOBS ===== */
 .anim-layer{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .ablob{position:absolute;border-radius:50%;filter:blur(80px);mix-blend-mode:screen;will-change:transform}
-.ab1{width:500px;height:500px;top:-10%;left:10%;background:radial-gradient(circle,rgba(200,169,110,0.12),transparent 70%);animation:abFloat1 18s ease-in-out infinite alternate}
-.ab2{width:400px;height:400px;bottom:5%;right:15%;background:radial-gradient(circle,rgba(110,154,139,0.1),transparent 70%);animation:abFloat2 22s ease-in-out infinite alternate}
-.ab3{width:350px;height:350px;top:40%;left:60%;background:radial-gradient(circle,rgba(139,126,200,0.08),transparent 70%);animation:abFloat3 25s ease-in-out infinite alternate}
-.ab4{width:300px;height:300px;top:20%;left:40%;background:radial-gradient(circle,rgba(196,134,58,0.07),transparent 70%);animation:abFloat4 20s ease-in-out infinite alternate}
+.ab1{width:500px;height:500px;top:-10%;left:10%;background:radial-gradient(circle,rgba(200,169,110,0.2),transparent 70%);animation:abFloat1 18s ease-in-out infinite alternate}
+.ab2{width:400px;height:400px;bottom:5%;right:15%;background:radial-gradient(circle,rgba(110,154,139,0.18),transparent 70%);animation:abFloat2 22s ease-in-out infinite alternate}
+.ab3{width:350px;height:350px;top:40%;left:60%;background:radial-gradient(circle,rgba(139,126,200,0.15),transparent 70%);animation:abFloat3 25s ease-in-out infinite alternate}
+.ab4{width:300px;height:300px;top:20%;left:40%;background:radial-gradient(circle,rgba(196,134,58,0.14),transparent 70%);animation:abFloat4 20s ease-in-out infinite alternate}
 @keyframes abFloat1{0%{transform:translate(0,0) scale(1)}33%{transform:translate(80px,60px) scale(1.15)}66%{transform:translate(-40px,100px) scale(.9)}100%{transform:translate(50px,-30px) scale(1.08)}}
 @keyframes abFloat2{0%{transform:translate(0,0) scale(1)}33%{transform:translate(-70px,-50px) scale(1.1)}66%{transform:translate(60px,-80px) scale(.85)}100%{transform:translate(-30px,40px) scale(1.05)}}
 @keyframes abFloat3{0%{transform:translate(0,0) scale(1)}50%{transform:translate(100px,30px) scale(1.2)}100%{transform:translate(-50px,-60px) scale(.95)}}
