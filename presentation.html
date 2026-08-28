@@ -6,248 +6,335 @@
 <title>Student to Future Leader</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
---bg:#08080a;--bg2:#0c0c10;--surface:rgba(255,255,255,0.03);--surface2:rgba(255,255,255,0.06);
---border:rgba(255,255,255,0.06);--border-glow:rgba(255,255,255,0.12);
---text:#f0ede6;--text-secondary:rgba(240,237,230,0.6);--text-dim:rgba(240,237,230,0.25);
---gold:#d4a853;--gold-soft:rgba(212,168,83,0.15);--gold-glow:rgba(212,168,83,0.3);
---emerald:#5cb88a;--emerald-soft:rgba(92,184,138,0.12);
---amber:#d4873a;--amber-soft:rgba(212,135,58,0.12);
---rose:#c47a6a;--rose-soft:rgba(196,122,106,0.12);
---violet:#8b7ec8;--violet-soft:rgba(139,126,200,0.12);
+--bg:#0e0d0b;--surface:rgba(200,169,110,0.06);--surface-hover:rgba(200,169,110,0.12);
+--border:rgba(200,169,110,0.1);--border-glow:rgba(200,169,110,0.2);
+--text:#f5f0e8;--text-muted:rgba(245,240,232,0.5);--text-dim:rgba(245,240,232,0.28);
+--gold:#c8a96e;--gold-light:#dfc08a;--gold-dim:rgba(200,169,110,0.3);
+--accent:#a38b5c;--accent-light:#bfa66a;
+--emerald:#7d9a6e;--rose:#b87a5e;--slate:#6b7280;
 }
-html,body{width:100%;height:100%;overflow:hidden;font-family:"Space Grotesk",sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
+html,body{width:100%;height:100%;overflow:hidden;font-family:"Inter",sans-serif;background:var(--bg);color:var(--text)}
+h1,h2,h3,h4,h5,h6{font-family:"Poppins",sans-serif}
 
-/* ===== GLOBAL CANVAS ===== */
-#sceneCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+/* ===== SECTION COLOR THEMES ===== */
+.s1{--sec:#c8a96e;--sec-light:#dfc08a;--sec-dim:rgba(200,169,110,0.3);--sec-glow:rgba(200,169,110,0.15)}
+.s2{--sec:#6e9a8b;--sec-light:#8fbfad;--sec-dim:rgba(110,154,139,0.3);--sec-glow:rgba(110,154,139,0.15)}
+.s3{--sec:#c4863a;--sec-light:#daa056;--sec-dim:rgba(196,134,58,0.3);--sec-glow:rgba(196,134,58,0.15)}
+.s4{--sec:#b87a5e;--sec-light:#d09478;--sec-dim:rgba(184,122,94,0.3);--sec-glow:rgba(184,122,94,0.15)}
+.s5{--sec:#8b7ec8;--sec-light:#a89bde;--sec-dim:rgba(139,126,200,0.3);--sec-glow:rgba(139,126,200,0.15)}
 
-/* ===== PROGRESS ===== */
-#progress{position:fixed;top:0;left:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);z-index:100;transition:width .6s cubic-bezier(.16,1,.3,1);opacity:.6}
+/* ===== VIDEO BACKGROUND ===== */
+.video-bg{position:fixed;inset:0;z-index:0;overflow:hidden}
+.video-bg video{width:100%;height:100%;object-fit:cover;opacity:.35;filter:saturate(.4) brightness(.7) hue-rotate(0deg);transition:opacity 2s ease;animation:videoHue 30s linear infinite}
+@keyframes videoHue{0%{filter:saturate(.4) brightness(.7) hue-rotate(0deg)}50%{filter:saturate(.5) brightness(.75) hue-rotate(15deg)}100%{filter:saturate(.4) brightness(.7) hue-rotate(0deg)}}
+.video-bg video.loaded{opacity:.35}
+.video-overlay{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(14,13,11,.35) 0%,rgba(14,13,11,.7) 60%,rgba(14,13,11,.88) 100%);pointer-events:none;animation:overlayPulse 8s ease-in-out infinite alternate}
+@keyframes overlayPulse{0%{opacity:.85}50%{opacity:.92}100%{opacity:.85}}
 
-/* ===== FULLSCREEN BTN ===== */
-#fs-btn{position:fixed;top:20px;right:20px;z-index:100;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.3);width:36px;height:36px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;backdrop-filter:blur(20px);transition:all .4s}
-#fs-btn:hover{background:rgba(255,255,255,0.08);color:var(--gold);border-color:var(--gold-soft)}
+/* ===== CSS ANIMATED BLOBS ===== */
+.anim-layer{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.ablob{position:absolute;border-radius:50%;filter:blur(80px);mix-blend-mode:screen;will-change:transform}
+.ab1{width:500px;height:500px;top:-10%;left:10%;background:radial-gradient(circle,rgba(200,169,110,0.2),transparent 70%);animation:abFloat1 18s ease-in-out infinite alternate}
+.ab2{width:400px;height:400px;bottom:5%;right:15%;background:radial-gradient(circle,rgba(110,154,139,0.18),transparent 70%);animation:abFloat2 22s ease-in-out infinite alternate}
+.ab3{width:350px;height:350px;top:40%;left:60%;background:radial-gradient(circle,rgba(139,126,200,0.15),transparent 70%);animation:abFloat3 25s ease-in-out infinite alternate}
+.ab4{width:300px;height:300px;top:20%;left:40%;background:radial-gradient(circle,rgba(196,134,58,0.14),transparent 70%);animation:abFloat4 20s ease-in-out infinite alternate}
+@keyframes abFloat1{0%{transform:translate(0,0) scale(1)}33%{transform:translate(80px,60px) scale(1.15)}66%{transform:translate(-40px,100px) scale(.9)}100%{transform:translate(50px,-30px) scale(1.08)}}
+@keyframes abFloat2{0%{transform:translate(0,0) scale(1)}33%{transform:translate(-70px,-50px) scale(1.1)}66%{transform:translate(60px,-80px) scale(.85)}100%{transform:translate(-30px,40px) scale(1.05)}}
+@keyframes abFloat3{0%{transform:translate(0,0) scale(1)}50%{transform:translate(100px,30px) scale(1.2)}100%{transform:translate(-50px,-60px) scale(.95)}}
+@keyframes abFloat4{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-80px,80px) scale(1.1)}100%{transform:translate(60px,-40px) scale(.9)}}
 
-/* ===== NAV ===== */
-#nav{position:fixed;bottom:0;left:0;right:0;height:48px;background:rgba(8,8,10,0.85);backdrop-filter:blur(30px);border-top:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;gap:32px;z-index:100}
-#nav button{background:none;border:none;color:rgba(255,255,255,0.25);padding:6px 16px;cursor:pointer;font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;transition:all .3s;position:relative}
-#nav button::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:1px;background:var(--gold);transition:all .3s;transform:translateX(-50%)}
-#nav button:hover{color:var(--gold)}
-#nav button:hover::after{width:100%}
-#nav button:disabled{opacity:.15;cursor:not-allowed}
-#nav button:disabled:hover::after{width:0}
-#counter{color:rgba(255,255,255,0.2);font-size:11px;font-weight:400;font-variant-numeric:tabular-nums;letter-spacing:.1em;font-family:"Space Grotesk",sans-serif}
+/* ===== 3D BACKGROUND CUBES ===== */
+.scene-3d{position:fixed;inset:0;z-index:0;overflow:hidden;perspective:1200px;background:transparent}
+.cube-wire{position:absolute;transform-style:preserve-3d;opacity:.45}
+.cube-wire .face{position:absolute;border:1.5px solid rgba(200,169,110,0.5);background:rgba(200,169,110,0.04);backface-visibility:visible}
+.cube-wire.c1{width:240px;height:240px;top:5%;right:8%;animation:spin1 20s linear infinite}
+.cube-wire.c2{width:180px;height:180px;bottom:10%;left:5%;animation:spin2 25s linear infinite}
+.cube-wire.c3{width:130px;height:130px;top:50%;right:20%;animation:spin3 18s linear infinite}
+.cube-wire.c4{width:300px;height:300px;top:-8%;left:25%;animation:spin4 30s linear infinite}
+.cube-wire.c5{width:100px;height:100px;bottom:25%;right:5%;animation:spin5 15s linear infinite}
+.cube-wire .f{transform:translateZ(calc(var(--s)/2))}
+.cube-wire .b{transform:rotateY(180deg) translateZ(calc(var(--s)/2))}
+.cube-wire .l{transform:rotateY(-90deg) translateZ(calc(var(--s)/2))}
+.cube-wire .r{transform:rotateY(90deg) translateZ(calc(var(--s)/2))}
+.cube-wire .t{transform:rotateX(90deg) translateZ(calc(var(--s)/2))}
+.cube-wire .bt{transform:rotateX(-90deg) translateZ(calc(var(--s)/2))}
+@keyframes spin1{from{transform:rotateX(20deg) rotateY(0deg)}to{transform:rotateX(20deg) rotateY(360deg)}}
+@keyframes spin2{from{transform:rotateX(-15deg) rotateY(0deg) rotateZ(10deg)}to{transform:rotateX(-15deg) rotateY(-360deg) rotateZ(10deg)}}
+@keyframes spin3{from{transform:rotateX(30deg) rotateY(0deg) rotateZ(-20deg)}to{transform:rotateX(30deg) rotateY(360deg) rotateZ(-20deg)}}
+@keyframes spin4{from{transform:rotateX(-10deg) rotateY(0deg)}to{transform:rotateX(-10deg) rotateY(360deg)}}
+@keyframes spin5{from{transform:rotateX(25deg) rotateY(0deg) rotateZ(30deg)}to{transform:rotateX(25deg) rotateY(-360deg) rotateZ(30deg)}}
 
-/* ===== PRESENTATION CONTAINER ===== */
-.pres{width:100%;height:100%;position:relative;z-index:1;perspective:2000px}
+/* ===== 3D RING ===== */
+.ring3d{position:absolute;top:50%;left:50%;transform-style:preserve-3d;animation:ringSpin 12s linear infinite}
+.ring3d .ring-seg{position:absolute;width:400px;height:400px;border:2px solid rgba(200,169,110,0.35);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
+@keyframes ringSpin{from{transform:rotateX(70deg) rotateY(0deg) translate(-50%,-50%)}to{transform:rotateX(70deg) rotateY(360deg) translate(-50%,-50%)}}
 
-/* ===== SLIDE BASE ===== */
-.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:70px 100px 60px;opacity:0;visibility:hidden;transform-style:preserve-3d;transition:transform 1s cubic-bezier(.16,1,.3,1),opacity 1s cubic-bezier(.16,1,.3,1),filter 1s cubic-bezier(.16,1,.3,1)}
+/* ===== 3D PYRAMID ===== */
+.pyramid3d{position:absolute;width:180px;height:180px;transform-style:preserve-3d;animation:pyrFloat 14s ease-in-out infinite;opacity:.4}
+.pyramid3d .tri{position:absolute;width:0;height:0;border-left:90px solid transparent;border-right:90px solid transparent;border-bottom:156px solid rgba(200,169,110,0.3);transform-origin:bottom center;backface-visibility:visible}
+.pyramid3d .tri:nth-child(1){transform:rotateX(19.47deg) translateY(-50px)}
+.pyramid3d .tri:nth-child(2){transform:rotateY(90deg) rotateX(19.47deg) translateY(-50px)}
+.pyramid3d .tri:nth-child(3){transform:rotateY(180deg) rotateX(19.47deg) translateY(-50px)}
+.pyramid3d .tri:nth-child(4){transform:rotateY(270deg) rotateX(19.47deg) translateY(-50px)}
+.pyramid3d .base{position:absolute;width:180px;height:180px;border:1.5px solid rgba(200,169,110,0.25);transform:rotateX(90deg) translateZ(-80px);top:0;left:0}
+@keyframes pyrFloat{0%{transform:translateY(0) rotateY(0deg) rotateX(15deg)}25%{transform:translateY(-20px) rotateY(90deg) rotateX(20deg)}50%{transform:translateY(0) rotateY(180deg) rotateX(15deg)}75%{transform:translateY(20px) rotateY(270deg) rotateX(10deg)}100%{transform:translateY(0) rotateY(360deg) rotateX(15deg)}}
+
+/* ===== 3D GRID FLOOR ===== */
+.grid3d{position:absolute;bottom:0;left:0;right:0;height:50%;perspective:600px;overflow:hidden;opacity:.3}
+.grid3d-inner{position:absolute;inset:0;transform:rotateX(65deg);transform-origin:bottom center;background-image:repeating-linear-gradient(90deg,rgba(200,169,110,0.7) 0px,rgba(200,169,110,0.7) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(0deg,rgba(200,169,110,0.7) 0px,rgba(200,169,110,0.7) 1px,transparent 1px,transparent 60px);background-size:60px 60px;animation:gridScroll 6s linear infinite}
+@keyframes gridScroll{from{background-position:0 0}to{background-position:0 60px}}
+
+.glow-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.25;will-change:transform}
+.glow-orb.g1{width:50vw;height:50vw;top:-10%;left:-5%;background:radial-gradient(circle,var(--gold),transparent 70%);animation:gdrift1 22s ease-in-out infinite alternate}
+.glow-orb.g2{width:40vw;height:40vw;bottom:-15%;right:-5%;background:radial-gradient(circle,var(--accent),transparent 70%);animation:gdrift2 28s ease-in-out infinite alternate}
+@keyframes gdrift1{0%{transform:translate(0,0)}50%{transform:translate(6%,8%)}100%{transform:translate(-4%,5%)}}
+@keyframes gdrift2{0%{transform:translate(0,0)}50%{transform:translate(-8%,-5%)}100%{transform:translate(5%,-3%)}}
+
+#progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--accent));z-index:1000;box-shadow:0 0 12px rgba(200,169,110,0.4);transition:width .5s cubic-bezier(.16,1,.3,1)}
+#fs-btn{position:fixed;top:16px;left:16px;z-index:1001;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);width:40px;height:40px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;backdrop-filter:blur(12px);transition:all .3s}
+#fs-btn:hover{background:var(--surface-hover);color:var(--gold);transform:scale(1.1)}
+#nav{position:fixed;bottom:0;left:0;right:0;height:50px;background:rgba(14,13,11,0.9);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:1000}
+#nav button{background:var(--surface);border:1px solid var(--border);color:var(--text-dim);padding:7px 18px;border-radius:8px;cursor:pointer;font-family:"Inter",sans-serif;font-size:13px;font-weight:500;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:6px}
+#nav button:hover{background:rgba(200,169,110,0.12);border-color:var(--gold);color:var(--gold);transform:scale(1.08)}
+#nav button:disabled{opacity:.2;cursor:not-allowed;transform:none}
+#counter{color:var(--text-dim);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+#particles{position:fixed;inset:0;z-index:1;pointer-events:none}
+.pres{width:100%;height:100%;position:relative;z-index:2;perspective:1400px}
+
+/* ===== SLIDES BASE ===== */
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:60px 80px 60px;opacity:0;visibility:hidden;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.16,1,.3,1),opacity .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1)}
 .slide.active{opacity:1;visibility:visible}
 .slide.exit{opacity:0;visibility:hidden}
 
-/* ===== CINEMATIC TRANSITIONS ===== */
-.tr-hero .active{transform:translateZ(0) scale(1) rotateX(0)}
-.tr-hero .exit{transform:translateZ(-600px) scale(.3) rotateX(10deg);opacity:0;filter:blur(8px)}
-.tr-hero .slide:not(.active):not(.exit){transform:translateZ(800px) scale(1.8) rotateX(-5deg);opacity:0;filter:blur(10px)}
+/* ===== 8 DIFFERENT 3D TRANSITIONS ===== */
+.tr-slide .active{transform:translateX(0) scale(1) rotateY(0)}
+.tr-slide .exit{transform:translateX(-120px) scale(.88) rotateY(-12deg);opacity:0;filter:blur(3px)}
+.tr-slide .slide:not(.active):not(.exit){transform:translateX(120px) scale(1.08) rotateY(12deg);opacity:0;filter:blur(3px)}
 
-.tr-cinema .active{transform:translateY(0) scale(1) rotateX(0)}
-.tr-cinema .exit{transform:translateY(-100vh) scale(.9) rotateX(-5deg);opacity:0;filter:blur(4px)}
-.tr-cinema .slide:not(.active):not(.exit){transform:translateY(100vh) scale(1.1) rotateX(5deg);opacity:0;filter:blur(4px)}
+.tr-zoom .active{transform:translateZ(0) scale(1) rotateX(0)}
+.tr-zoom .exit{transform:translateZ(-500px) scale(.4) rotateX(15deg);opacity:0;filter:blur(6px)}
+.tr-zoom .slide:not(.active):not(.exit){transform:translateZ(500px) scale(1.5) rotateX(-15deg);opacity:0;filter:blur(6px)}
 
-.tr-morph .active{transform:scale(1) rotateY(0) rotateZ(0)}
-.tr-morph .exit{transform:scale(.15) rotateY(60deg) rotateZ(-20deg);opacity:0;filter:blur(12px)}
-.tr-morph .slide:not(.active):not(.exit){transform:scale(2) rotateY(-60deg) rotateZ(20deg);opacity:0;filter:blur(12px)}
+.tr-fade .active{transform:translateY(0) rotateX(0)}
+.tr-fade .exit{transform:translateY(-60px) rotateX(-8deg);opacity:0}
+.tr-fade .slide:not(.active):not(.exit){transform:translateY(60px) rotateX(8deg);opacity:0}
+
+.tr-flip .active{transform:rotateX(0) scale(1) translateZ(0)}
+.tr-flip .exit{transform:rotateX(-100deg) scale(.8) translateZ(-100px);opacity:0;transform-origin:top center}
+.tr-flip .slide:not(.active):not(.exit){transform:rotateX(100deg) scale(.8) translateZ(-100px);opacity:0;transform-origin:bottom center}
+
+.tr-up .active{transform:translateY(0) rotateX(0) scale(1)}
+.tr-up .exit{transform:translateY(-110%) rotateX(-15deg) scale(.85);opacity:0}
+.tr-up .slide:not(.active):not(.exit){transform:translateY(110%) rotateX(15deg) scale(.85);opacity:0}
+
+.tr-scale .active{transform:scale(1) rotateY(0) rotateZ(0)}
+.tr-scale .exit{transform:scale(.2) rotateY(30deg) rotateZ(-12deg);opacity:0}
+.tr-scale .slide:not(.active):not(.exit){transform:scale(1.6) rotateY(-30deg) rotateZ(12deg);opacity:0}
+
+.tr-rotate .active{transform:rotateY(0) scale(1) translateZ(0)}
+.tr-rotate .exit{transform:rotateY(-45deg) translateX(-80px) scale(.85) translateZ(-200px);opacity:0;filter:blur(2px)}
+.tr-rotate .slide:not(.active):not(.exit){transform:rotateY(45deg) translateX(80px) scale(1.1) translateZ(200px);opacity:0;filter:blur(2px)}
 
 .tr-depth .active{transform:translateZ(0) scale(1) rotateX(0)}
-.tr-depth .exit{transform:translateZ(-800px) scale(.4) rotateX(15deg);opacity:0;filter:blur(8px)}
-.tr-depth .slide:not(.active):not(.exit){transform:translateZ(800px) scale(1.4) rotateX(-15deg);opacity:0;filter:blur(8px)}
+.tr-depth .exit{transform:translateZ(-400px) scale(.5) rotateX(20deg);opacity:0;filter:blur(5px)}
+.tr-depth .slide:not(.active):not(.exit){transform:translateZ(400px) scale(1.3) rotateX(-20deg);opacity:0;filter:blur(5px)}
 
-.tr-spatial .active{transform:translateX(0) rotateY(0) scale(1)}
-.tr-spatial .exit{transform:translateX(-100%) rotateY(-15deg) scale(.85);opacity:0;filter:blur(3px)}
-.tr-spatial .slide:not(.active):not(.exit){transform:translateX(100%) rotateY(15deg) scale(1.1);opacity:0;filter:blur(3px)}
-
-.tr-reveal .active{transform:translateY(0) rotateX(0) scale(1)}
-.tr-reveal .exit{transform:translateY(80px) rotateX(-12deg) scale(.92);opacity:0;filter:blur(2px)}
-.tr-reveal .slide:not(.active):not(.exit){transform:translateY(-80px) rotateX(12deg) scale(1.05);opacity:0;filter:blur(2px)}
-
-.tr-zoom .active{transform:scale(1) rotateY(0)}
-.tr-zoom .exit{transform:scale(.3) rotateY(30deg);opacity:0;filter:blur(6px)}
-.tr-zoom .slide:not(.active):not(.exit){transform:scale(1.8) rotateY(-30deg);opacity:0;filter:blur(6px)}
-
-.tr-curtain .active{transform:translateX(0) scale(1) rotateY(0)}
-.tr-curtain .exit{transform:translateX(-50%) scale(.7) rotateY(25deg);opacity:0;filter:blur(4px)}
-.tr-curtain .slide:not(.active):not(.exit){transform:translateX(50%) scale(1.2) rotateY(-25deg);opacity:0;filter:blur(4px)}
-
-/* ===== SLIDE INNER ===== */
+/* ===== SLIDE CONTENT ===== */
 .slide-inner{position:relative;z-index:1;width:100%;max-width:1400px;height:100%;display:flex;flex-direction:column;justify-content:center}
-
-/* ===== LAYOUTS ===== */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;width:100%}
-.col-text{display:flex;flex-direction:column;gap:16px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;width:100%}
+.col-text{display:flex;flex-direction:column;gap:14px}
 .col-img{display:flex;align-items:center;justify-content:center}
+.col-img img{width:100%;max-width:460px;height:auto;max-height:380px;object-fit:cover;border-radius:14px;border:1px solid var(--border);transition:all .6s cubic-bezier(.16,1,.3,1);transform:perspective(800px) rotateY(0)}
+.col-img:hover img{transform:perspective(800px) rotateY(-5deg) scale(1.04) translateZ(20px);box-shadow:0 30px 60px rgba(0,0,0,0.6),0 0 40px var(--gold-dim)}
 
-/* ===== IMAGES ===== */
-.col-img img{width:100%;max-width:480px;height:auto;max-height:400px;object-fit:cover;border-radius:16px;border:1px solid rgba(255,255,255,0.06);transition:all .8s cubic-bezier(.16,1,.3,1);transform:perspective(1000px) rotateY(0);box-shadow:0 40px 80px rgba(0,0,0,0.5)}
-.col-img:hover img{transform:perspective(1000px) rotateY(-4deg) scale(1.03) translateZ(30px);box-shadow:0 60px 120px rgba(0,0,0,0.7),0 0 60px var(--gold-soft)}
+.gtext{background:linear-gradient(135deg,var(--sec,var(--gold)),var(--sec-light,var(--gold-light)),var(--sec,var(--gold)));background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:800;line-height:1.15;animation:gshift 8s ease infinite}
+@keyframes gshift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-/* ===== TYPOGRAPHY ===== */
-.gtext{background:linear-gradient(135deg,var(--gold),#f0d78c,var(--gold));background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:800;line-height:1.1;animation:gShift 6s ease infinite}
-@keyframes gShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.stitle{font-size:2.4rem;font-weight:800;margin-bottom:4px;letter-spacing:-.02em}
-.ssub{font-size:.95rem;color:var(--text-secondary);font-weight:300;line-height:1.7;font-family:"Space Grotesk",sans-serif}
+.stitle{font-size:2.2rem;font-weight:800;margin-bottom:6px}
+.ssub{font-size:1rem;color:var(--text-muted);font-weight:400;line-height:1.6}
 
-/* ===== GLASS CARDS ===== */
-.glass{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:24px;backdrop-filter:blur(20px);box-shadow:0 8px 40px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.03);transition:all .5s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden}
-.glass::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(212,168,83,0.02) 50%,transparent 60%);opacity:0;transition:opacity .5s;pointer-events:none}
-.glass:hover::before{opacity:1}
-.glass:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.1);box-shadow:0 20px 60px rgba(0,0,0,0.4),0 0 40px var(--gold-soft)}
+.glass{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;backdrop-filter:blur(14px);box-shadow:0 8px 32px rgba(0,0,0,0.3),inset 0 1px 0 rgba(200,169,110,0.04);transition:all .4s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden}
+.glass::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 30%,rgba(200,169,110,0.03) 40%,rgba(200,169,110,0.06) 50%,rgba(200,169,110,0.03) 60%,transparent 70%);transform:rotate(45deg) translateY(-100%);transition:transform .6s;pointer-events:none;z-index:1}
+.glass:hover::before{transform:rotate(45deg) translateY(100%)}
+.glass:hover{transform:translateY(-5px);box-shadow:0 16px 44px rgba(0,0,0,0.4),0 0 0 1px var(--border-glow)}
 
-/* ===== QUOTE ===== */
-.quote{border-left:2px solid var(--gold);border-radius:0 14px 14px 0;padding:20px 24px;font-style:italic;font-size:1rem;line-height:1.8;color:var(--text-secondary);margin:8px 0;background:rgba(212,168,83,0.03)}
-.quote cite{display:block;margin-top:10px;font-style:normal;font-size:.78rem;color:var(--gold);font-weight:600;letter-spacing:.03em}
+.quote{background:var(--surface);border-left:3px solid var(--sec,var(--gold));border-radius:0 12px 12px 0;padding:18px 22px;font-style:italic;font-size:1rem;line-height:1.7;color:var(--text-muted);margin:10px 0;backdrop-filter:blur(12px)}
+.quote cite{display:block;margin-top:8px;font-style:normal;font-size:.8rem;color:var(--sec,var(--gold));font-weight:600}
 
-/* ===== LISTS ===== */
-.blist{list-style:none;display:flex;flex-direction:column;gap:12px}
-.blist li{display:flex;align-items:flex-start;gap:12px;font-size:.92rem;line-height:1.65;color:var(--text-secondary);font-family:"Space Grotesk",sans-serif}
-.blist li i{color:var(--gold);margin-top:4px;flex-shrink:0;font-size:.8rem}
+.blist{list-style:none;display:flex;flex-direction:column;gap:10px}
+.blist li{display:flex;align-items:flex-start;gap:10px;font-size:.95rem;line-height:1.6;color:var(--text-muted)}
+.blist li i{color:var(--sec,var(--gold));margin-top:3px;flex-shrink:0;font-size:.85rem}
 .blist li strong{color:var(--text);font-weight:600}
 
-.cklist{list-style:none;display:flex;flex-direction:column;gap:10px}
-.cklist li{display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--text-secondary);font-family:"Space Grotesk",sans-serif}
-.cklist li i{color:var(--emerald);font-size:.78rem}
+.cklist{list-style:none;display:flex;flex-direction:column;gap:8px}
+.cklist li{display:flex;align-items:center;gap:10px;font-size:.9rem;color:var(--text-muted)}
+.cklist li i{color:var(--sec,var(--emerald));font-size:.8rem}
 
-/* ===== FLOW ===== */
-.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0}
-.flow .step{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:10px 16px;font-size:.78rem;font-weight:600;color:var(--text);white-space:nowrap;transition:all .4s;font-family:"Space Grotesk",sans-serif;letter-spacing:.02em}
-.flow .step:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 12px 30px rgba(0,0,0,0.4),0 0 20px var(--gold-soft)}
-.flow .arr{color:var(--gold);font-size:.8rem;opacity:.4;animation:arrPulse 2s ease-in-out infinite}
-@keyframes arrPulse{0%,100%{opacity:.4;transform:translateX(0)}50%{opacity:.8;transform:translateX(3px)}}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.flow .step{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:.8rem;font-weight:600;color:var(--text);white-space:nowrap;transition:all .3s}
+.flow .step:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.4);border-color:var(--sec,var(--gold))}
+.flow .arr{color:var(--sec,var(--gold));font-size:.9rem;animation:apulse 2s ease-in-out infinite}
+@keyframes apulse{0%,100%{opacity:1;transform:translateX(0)}50%{opacity:.35;transform:translateX(3px)}}
 
-/* ===== SKILL CARDS ===== */
-.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.scard{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:24px;text-align:center;backdrop-filter:blur(20px);transition:all .5s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden}
-.scard::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(212,168,83,0.03) 50%,transparent 60%);opacity:0;transition:opacity .5s;pointer-events:none}
-.scard:hover::after{opacity:1}
-.scard:hover{transform:translateY(-6px) scale(1.02);border-color:rgba(255,255,255,0.1);box-shadow:0 20px 50px rgba(0,0,0,0.4)}
-.scard .icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto 12px;color:var(--bg)}
-.scard h4{font-size:.95rem;font-weight:700;margin-bottom:6px;color:var(--text)}
-.scard p{font-size:.78rem;color:var(--text-secondary);line-height:1.5;font-family:"Space Grotesk",sans-serif}
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;backdrop-filter:blur(14px);transition:all .4s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden}
+.scard::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 30%,rgba(200,169,110,0.03) 40%,rgba(200,169,110,0.06) 50%,rgba(200,169,110,0.03) 60%,transparent 70%);transform:rotate(45deg) translateY(-100%);transition:transform .6s;pointer-events:none;z-index:1}
+.scard:hover::before{transform:rotate(45deg) translateY(100%)}
+.scard:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 16px 40px rgba(0,0,0,0.4);border-color:var(--border-glow)}
+.scard .icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto 10px;color:var(--bg)}
+.scard h4{font-size:.95rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.scard p{font-size:.8rem;color:var(--text-muted);line-height:1.5}
 
-/* ===== RIPPLE GRID ===== */
-.ripple-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.rcard{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:20px;backdrop-filter:blur(20px);transition:all .5s cubic-bezier(.175,.885,.32,1.275)}
-.rcard:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.1);box-shadow:0 16px 40px rgba(0,0,0,0.4)}
-.rcard .icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.9rem;margin-bottom:10px;color:var(--bg)}
-.rcard h4{font-size:.88rem;font-weight:700;margin-bottom:5px;color:var(--text)}
-.rcard p{font-size:.76rem;color:var(--text-secondary);line-height:1.5;font-family:"Space Grotesk",sans-serif}
+.ripple-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;backdrop-filter:blur(14px);transition:all .4s cubic-bezier(.175,.885,.32,1.275)}
+.rcard:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.4);border-color:var(--border-glow)}
+.rcard .icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;margin-bottom:8px;color:var(--bg)}
+.rcard h4{font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.rcard p{font-size:.78rem;color:var(--text-muted);line-height:1.5}
 
-/* ===== CHALLENGE BOXES ===== */
-.cbox{border-radius:14px;padding:18px 20px;margin-bottom:12px}
-.cbox.problem{background:rgba(196,122,106,0.06);border:1px solid rgba(196,122,106,0.1)}
-.cbox.solution{background:rgba(92,184,138,0.06);border:1px solid rgba(92,184,138,0.1)}
-.cbox .label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;display:flex;align-items:center;gap:6px;font-family:"Space Grotesk",sans-serif}
+.cbox{border-radius:12px;padding:16px 18px;margin-bottom:10px}
+.cbox.problem{background:rgba(184,122,94,0.08);border:1px solid rgba(184,122,94,0.15)}
+.cbox.solution{background:rgba(125,154,110,0.08);border:1px solid rgba(125,154,110,0.15)}
+.cbox .label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
 .cbox.problem .label{color:var(--rose)}
 .cbox.solution .label{color:var(--emerald)}
-.cbox p{font-size:.88rem;color:var(--text-secondary);line-height:1.65;font-family:"Space Grotesk",sans-serif}
+.cbox p{font-size:.88rem;color:var(--text-muted);line-height:1.6}
 
-/* ===== TAKEAWAY GRID ===== */
-.tkgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.tkcard{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:22px;text-align:center;backdrop-filter:blur(20px);transition:all .5s cubic-bezier(.175,.885,.32,1.275)}
-.tkcard:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.1);box-shadow:0 16px 40px rgba(0,0,0,0.4)}
-.tkcard .icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin:0 auto 10px;color:var(--bg)}
-.tkcard h4{font-size:.9rem;font-weight:700;margin-bottom:5px;color:var(--text)}
-.tkcard p{font-size:.76rem;color:var(--text-secondary);line-height:1.5;font-family:"Space Grotesk",sans-serif}
+.tkgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tkcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;backdrop-filter:blur(14px);transition:all .4s cubic-bezier(.175,.885,.32,1.275)}
+.tkcard:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,0.4);border-color:var(--border-glow)}
+.tkcard .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin:0 auto 8px;color:var(--bg)}
+.tkcard h4{font-size:.88rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.tkcard p{font-size:.78rem;color:var(--text-muted);line-height:1.5}
 
-/* ===== DIVIDER ===== */
-.divider{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px}
-.divider .tag{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text-secondary);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:24px;padding:8px 20px;backdrop-filter:blur(20px);font-family:"Space Grotesk",sans-serif;letter-spacing:.03em}
-.divider .tag i{color:var(--gold);font-size:.8rem}
+.divider{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px}
+.divider .tag{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 16px;backdrop-filter:blur(12px)}
+.divider .tag i{color:var(--sec,var(--gold))}
 
-/* ===== STAGGER ANIMATIONS ===== */
-.slide.active .stg{animation:stgCinematic .8s cubic-bezier(.16,1,.3,1) forwards;opacity:0}
-.slide.active .stg:nth-child(1){animation-delay:.15s}
-.slide.active .stg:nth-child(2){animation-delay:.3s}
-.slide.active .stg:nth-child(3){animation-delay:.45s}
-.slide.active .stg:nth-child(4){animation-delay:.6s}
-.slide.active .stg:nth-child(5){animation-delay:.75s}
-.slide.active .stg:nth-child(6){animation-delay:.9s}
-.slide.active .stg:nth-child(7){animation-delay:1.05s}
-.slide.active .stg:nth-child(8){animation-delay:1.2s}
-@keyframes stgCinematic{from{opacity:0;transform:translateY(40px) translateZ(-60px) rotateX(6deg)}to{opacity:1;transform:translateY(0) translateZ(0) rotateX(0)}}
+/* ===== STAGGERED ENTRANCE ===== */
+.slide.active .stg{animation:stgIn .6s cubic-bezier(.16,1,.3,1) forwards;opacity:0}
+.slide.active .stg:nth-child(1){animation-delay:.1s}
+.slide.active .stg:nth-child(2){animation-delay:.2s}
+.slide.active .stg:nth-child(3){animation-delay:.3s}
+.slide.active .stg:nth-child(4){animation-delay:.4s}
+.slide.active .stg:nth-child(5){animation-delay:.5s}
+.slide.active .stg:nth-child(6){animation-delay:.6s}
+.slide.active .stg:nth-child(7){animation-delay:.7s}
+.slide.active .stg:nth-child(8){animation-delay:.8s}
+@keyframes stgIn{from{opacity:0;transform:translateY(30px) translateZ(-40px) rotateX(8deg)}to{opacity:1;transform:translateY(0) translateZ(0) rotateX(0)}}
 
-.slide.active .cg .stg{animation:cgCinematic .7s cubic-bezier(.16,1,.3,1) forwards;opacity:0}
-.slide.active .cg .stg:nth-child(1){animation-delay:.2s}
-.slide.active .cg .stg:nth-child(2){animation-delay:.32s}
-.slide.active .cg .stg:nth-child(3){animation-delay:.44s}
-.slide.active .cg .stg:nth-child(4){animation-delay:.56s}
-.slide.active .cg .stg:nth-child(5){animation-delay:.68s}
-.slide.active .cg .stg:nth-child(6){animation-delay:.8s}
-@keyframes cgCinematic{from{opacity:0;transform:translateY(30px) translateZ(-40px) rotateX(5deg) scale(.96)}to{opacity:1;transform:translateY(0) translateZ(0) rotateX(0) scale(1)}}
+.slide.active .cg .stg{animation:cgIn .5s cubic-bezier(.16,1,.3,1) forwards;opacity:0}
+.slide.active .cg .stg:nth-child(1){animation-delay:.15s}
+.slide.active .cg .stg:nth-child(2){animation-delay:.25s}
+.slide.active .cg .stg:nth-child(3){animation-delay:.35s}
+.slide.active .cg .stg:nth-child(4){animation-delay:.45s}
+.slide.active .cg .stg:nth-child(5){animation-delay:.55s}
+.slide.active .cg .stg:nth-child(6){animation-delay:.65s}
+@keyframes cgIn{from{opacity:0;transform:translateY(20px) translateZ(-30px) rotateX(6deg) scale(.95)}to{opacity:1;transform:translateY(0) translateZ(0) rotateX(0) scale(1)}}
 
-/* ===== SOURCE ===== */
-.src{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--text-dim);margin-top:8px;font-family:"Space Grotesk",sans-serif;letter-spacing:.03em}
-.src i{font-size:.68rem}
+.src{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text-dim);margin-top:6px}
+.src i{font-size:.7rem}
 
-/* ===== TEAM LIST ===== */
-.team-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-.team-list .tm{display:flex;align-items:center;gap:7px;font-size:.82rem;color:var(--text-secondary);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:24px;padding:6px 16px;backdrop-filter:blur(16px);font-family:"Space Grotesk",sans-serif;transition:all .3s}
-.team-list .tm:hover{border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.05)}
-.team-list .tm i{font-size:.78rem}
+.team-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.team-list .tm{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 14px;backdrop-filter:blur(10px)}
+.team-list .tm i{font-size:.8rem}
 
-/* ===== SLIDE BACKGROUNDS ===== */
-.slide-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.slide-bg canvas{width:100%;height:100%}
-
-/* ===== SECTION ACCENTS ===== */
-.s1 .gtext{background:linear-gradient(135deg,var(--gold),#f0d78c,var(--gold));-webkit-background-clip:text;background-clip:text}
-.s2 .gtext{background:linear-gradient(135deg,var(--emerald),#8fd4b4,var(--emerald));-webkit-background-clip:text;background-clip:text}
-.s3 .gtext{background:linear-gradient(135deg,var(--amber),#e8a85a,var(--amber));-webkit-background-clip:text;background-clip:text}
-.s4 .gtext{background:linear-gradient(135deg,var(--rose),#d9a090,var(--rose));-webkit-background-clip:text;background-clip:text}
-.s5 .gtext{background:linear-gradient(135deg,var(--violet),#a89bde,var(--violet));-webkit-background-clip:text;background-clip:text}
-
-/* ===== RESPONSIVE ===== */
 @media(max-width:900px){
-.two-col{grid-template-columns:1fr;gap:28px}
+.two-col{grid-template-columns:1fr;gap:24px}
 .col-img{display:none}
 .skills,.tkgrid{grid-template-columns:repeat(2,1fr)}
-.slide{padding:50px 28px 60px}
-.stitle{font-size:1.7rem}
+.slide{padding:50px 24px 60px}
+.stitle{font-size:1.6rem}
+.cube-wire{display:none}
+.video-bg video{display:none}
+.video-bg{background:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=80') center/cover no-repeat;opacity:.15}
 }
 @media(prefers-reduced-motion:reduce){
-.slide{transition:none!important}
-.slide.active .stg,.slide.active .cg .stg{animation:none!important;opacity:1}
+.video-bg video{display:none}
+.ablob{animation:none!important}
 }
 </style>
 </head>
 <body>
 
-<canvas id="sceneCanvas"></canvas>
+<!-- VIDEO BACKGROUND -->
+<div class="video-bg" id="videoBg">
+<video autoplay loop muted playsinline id="bgVideo" poster="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=80">
+<source src="https://videos.pexels.com/video-files/3191887/3191887-hd_1920_1080_25fps.mp4" type="video/mp4">
+<source src="https://videos.pexels.com/video-files/3201568/3201568-hd_1920_1080_25fps.mp4" type="video/mp4">
+</video>
+</div>
+<div class="video-overlay"></div>
+
+<!-- CSS ANIMATED BLOBS -->
+<div class="anim-layer">
+<div class="ablob ab1"></div>
+<div class="ablob ab2"></div>
+<div class="ablob ab3"></div>
+<div class="ablob ab4"></div>
+</div>
+
+<div class="scene-3d">
+<div class="glow-orb g1"></div>
+<div class="glow-orb g2"></div>
+<div class="cube-wire c1" style="--s:180px">
+<div class="face f" style="width:180px;height:180px"></div><div class="face b" style="width:180px;height:180px"></div><div class="face l" style="width:180px;height:180px"></div><div class="face r" style="width:180px;height:180px"></div><div class="face t" style="width:180px;height:180px"></div><div class="face bt" style="width:180px;height:180px"></div>
+</div>
+<div class="cube-wire c2" style="--s:120px">
+<div class="face f" style="width:120px;height:120px"></div><div class="face b" style="width:120px;height:120px"></div><div class="face l" style="width:120px;height:120px"></div><div class="face r" style="width:120px;height:120px"></div><div class="face t" style="width:120px;height:120px"></div><div class="face bt" style="width:120px;height:120px"></div>
+</div>
+<div class="cube-wire c3" style="--s:90px">
+<div class="face f" style="width:90px;height:90px"></div><div class="face b" style="width:90px;height:90px"></div><div class="face l" style="width:90px;height:90px"></div><div class="face r" style="width:90px;height:90px"></div><div class="face t" style="width:90px;height:90px"></div><div class="face bt" style="width:90px;height:90px"></div>
+</div>
+<div class="cube-wire c4" style="--s:220px">
+<div class="face f" style="width:220px;height:220px"></div><div class="face b" style="width:220px;height:220px"></div><div class="face l" style="width:220px;height:220px"></div><div class="face r" style="width:220px;height:220px"></div><div class="face t" style="width:220px;height:220px"></div><div class="face bt" style="width:220px;height:220px"></div>
+</div>
+<div class="cube-wire c5" style="--s:60px">
+<div class="face f" style="width:60px;height:60px"></div><div class="face b" style="width:60px;height:60px"></div><div class="face l" style="width:60px;height:60px"></div><div class="face r" style="width:60px;height:60px"></div><div class="face t" style="width:60px;height:60px"></div><div class="face bt" style="width:60px;height:60px"></div>
+</div>
+</div>
+
+<!-- 3D RING -->
+<div class="ring3d">
+<div class="ring-seg"></div>
+<div class="ring-seg" style="width:260px;height:260px;border-color:rgba(200,169,110,0.15)"></div>
+<div class="ring-seg" style="width:200px;height:200px;border-color:rgba(200,169,110,0.1)"></div>
+</div>
+
+<!-- 3D PYRAMID -->
+<div class="pyramid3d" style="top:18%;left:8%">
+<div class="tri"></div><div class="tri"></div><div class="tri"></div><div class="tri"></div>
+<div class="base"></div>
+</div>
+
+<!-- 3D GRID FLOOR -->
+<div class="grid3d"><div class="grid3d-inner"></div></div>
+
+<canvas id="particles"></canvas>
 <div id="progress"></div>
 <button id="fs-btn" onclick="toggleFS()"><i class="fas fa-expand"></i></button>
 
-<div class="pres tr-hero" id="pres">
+<div class="pres tr-slide" id="pres">
 
 <!-- SLIDE 1: TITLE -->
-<div class="slide active" data-i="0" data-tr="tr-hero">
-<div class="slide-bg" data-bg="title"></div>
+<div class="slide active" data-i="0" data-tr="tr-zoom">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
-<div class="stg" style="font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-family:'Space Grotesk',sans-serif">University Presentation</div>
-<h1 class="stg gtext" style="font-size:3.4rem;margin-bottom:10px;line-height:1.05">Student to Future Leader</h1>
+<div class="stg" style="font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">University Presentation</div>
+<h1 class="stg gtext" style="font-size:3rem;margin-bottom:8px">Student to Future Leader</h1>
 <p class="stg ssub">Empowering the next generation of leaders through initiative, responsibility, and growth.</p>
 <div class="stg team-list">
 <span class="tm"><i class="fas fa-user" style="color:var(--gold)"></i>Habiba Mohamed</span>
 <span class="tm"><i class="fas fa-user" style="color:var(--emerald)"></i>Habiba Kamal</span>
-<span class="tm"><i class="fas fa-user" style="color:var(--amber)"></i>Mohamed Mostafa</span>
+<span class="tm"><i class="fas fa-user" style="color:#c4863a"></i>Mohamed Mostafa</span>
 <span class="tm"><i class="fas fa-user" style="color:var(--rose)"></i>Roqia Wael</span>
-<span class="tm"><i class="fas fa-user" style="color:var(--violet)"></i>Farah Amr</span>
+<span class="tm"><i class="fas fa-user" style="color:#8b7ec8"></i>Farah Amr</span>
 </div>
 </div>
 <div class="col-img stg"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80" alt="Students"></div>
@@ -256,38 +343,35 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 2: AGENDA -->
-<div class="slide" data-i="1" data-tr="tr-cinema">
-<div class="slide-bg" data-bg="agenda"></div>
+<div class="slide" data-i="1" data-tr="tr-fade">
 <div class="slide-inner">
 <h2 class="stg gtext stitle">Agenda</h2>
-<p class="stg ssub" style="margin-bottom:18px">What we will cover today</p>
+<p class="stg ssub" style="margin-bottom:16px">What we will cover today</p>
 <div class="two-col cg">
-<div class="col-text" style="gap:12px">
-<div class="stg glass" style="display:flex;align-items:center;gap:16px;padding:16px 20px"><div style="width:40px;height:40px;border-radius:12px;background:var(--gold);display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-lightbulb"></i></div><div><div style="font-size:.68rem;color:var(--text-dim);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-family:'Space Grotesk',sans-serif">Section 1</div><div style="font-size:.9rem;font-weight:600;color:var(--text)">What is Student-to-Future Leader?</div><div style="font-size:.72rem;color:var(--text-secondary);font-family:'Space Grotesk',sans-serif">Habiba Mohamed</div></div></div>
-<div class="stg glass" style="display:flex;align-items:center;gap:16px;padding:16px 20px"><div style="width:40px;height:40px;border-radius:12px;background:var(--emerald);display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-star"></i></div><div><div style="font-size:.68rem;color:var(--text-dim);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-family:'Space Grotesk',sans-serif">Section 2</div><div style="font-size:.9rem;font-weight:600;color:var(--text)">Essential Leadership Skills</div><div style="font-size:.72rem;color:var(--text-secondary);font-family:'Space Grotesk',sans-serif">Habiba Kamal</div></div></div>
-<div class="stg glass" style="display:flex;align-items:center;gap:16px;padding:16px 20px"><div style="width:40px;height:40px;border-radius:12px;background:var(--amber);display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-road"></i></div><div><div style="font-size:.68rem;color:var(--text-dim);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-family:'Space Grotesk',sans-serif">Section 3</div><div style="font-size:.9rem;font-weight:600;color:var(--text)">How to Become a Future Leader</div><div style="font-size:.72rem;color:var(--text-secondary);font-family:'Space Grotesk',sans-serif">Mohamed Mostafa</div></div></div>
+<div class="col-text" style="gap:10px">
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:var(--gold);display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-lightbulb"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Section 1</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">What is Student-to-Future Leader?</div><div style="font-size:.75rem;color:var(--text-muted)">Habiba Mohamed</div></div></div>
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:#6e9a8b;display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-star"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Section 2</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">Essential Leadership Skills</div><div style="font-size:.75rem;color:var(--text-muted)">Habiba Kamal</div></div></div>
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:#c4863a;display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-road"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Section 3</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">How to Become a Future Leader</div><div style="font-size:.75rem;color:var(--text-muted)">Mohamed Mostafa</div></div></div>
 </div>
-<div class="col-text" style="gap:12px">
-<div class="stg glass" style="display:flex;align-items:center;gap:16px;padding:16px 20px"><div style="width:40px;height:40px;border-radius:12px;background:var(--rose);display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-bolt"></i></div><div><div style="font-size:.68rem;color:var(--text-dim);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-family:'Space Grotesk',sans-serif">Section 4</div><div style="font-size:.9rem;font-weight:600;color:var(--text)">Challenges Students Face</div><div style="font-size:.72rem;color:var(--text-secondary);font-family:'Space Grotesk',sans-serif">Roqia Wael</div></div></div>
-<div class="stg glass" style="display:flex;align-items:center;gap:16px;padding:16px 20px"><div style="width:40px;height:40px;border-radius:12px;background:var(--violet);display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-water"></i></div><div><div style="font-size:.68rem;color:var(--text-dim);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-family:'Space Grotesk',sans-serif">Section 5</div><div style="font-size:.9rem;font-weight:600;color:var(--text)">The Ripple Effect</div><div style="font-size:.72rem;color:var(--text-secondary);font-family:'Space Grotesk',sans-serif">Farah Amr</div></div></div>
-<div class="stg glass" style="display:flex;align-items:center;gap:16px;padding:16px 20px"><div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:.85rem;flex-shrink:0"><i class="fas fa-flag-checkered"></i></div><div><div style="font-size:.68rem;color:var(--text-dim);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-family:'Space Grotesk',sans-serif">Closing</div><div style="font-size:.9rem;font-weight:600;color:var(--text)">Key Takeaways & Thank You</div></div></div>
+<div class="col-text" style="gap:10px">
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:var(--rose);display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-bolt"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Section 4</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">Challenges Students Face</div><div style="font-size:.75rem;color:var(--text-muted)">Roqia Wael</div></div></div>
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:#8b7ec8;display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-water"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Section 5</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">The Ripple Effect</div><div style="font-size:.75rem;color:var(--text-muted)">Farah Amr</div></div></div>
+<div class="stg glass" style="display:flex;align-items:center;gap:14px;padding:14px 18px"><div style="width:38px;height:38px;border-radius:10px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:.85rem;flex-shrink:0"><i class="fas fa-flag-checkered"></i></div><div><div style="font-size:.7rem;color:var(--text-dim);font-weight:600">Closing</div><div style="font-size:.88rem;font-weight:600;color:var(--text)">Key Takeaways & Thank You</div></div></div>
 </div>
 </div>
 </div>
 </div>
 
 <!-- SLIDE 3: SECTION 1 DIVIDER -->
-<div class="slide" data-i="2" data-tr="tr-morph" data-section="s1">
-<div class="slide-bg" data-bg="s1divider"></div>
+<div class="slide" data-i="2" data-tr="tr-scale" data-section="s1">
 <div class="slide-inner divider">
-<h2 class="stg gtext" style="font-size:2.8rem">What is Student-to-Future Leader?</h2>
+<h2 class="stg gtext" style="font-size:2.6rem">What is Student-to-Future Leader?</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Habiba Mohamed</div>
 </div>
 </div>
 
 <!-- SLIDE 4: WHAT DOES IT MEAN -->
-<div class="slide" data-i="3" data-tr="tr-spatial" data-section="s1">
-<div class="slide-bg" data-bg="s1content"></div>
+<div class="slide" data-i="3" data-tr="tr-slide" data-section="s1">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -301,8 +385,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 5: KEY IDEAS -->
-<div class="slide" data-i="4" data-tr="tr-reveal" data-section="s1">
-<div class="slide-bg" data-bg="s1content"></div>
+<div class="slide" data-i="4" data-tr="tr-up" data-section="s1">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -322,8 +405,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 6: THE JOURNEY -->
-<div class="slide" data-i="5" data-tr="tr-curtain" data-section="s1">
-<div class="slide-bg" data-bg="s1journey"></div>
+<div class="slide" data-i="5" data-tr="tr-rotate" data-section="s1">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -337,8 +419,8 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 <span class="step">Skills</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
 <span class="step">Leader</span>
 </div>
-<div class="stg glass" style="margin-top:10px">
-<p style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;font-family:'Space Grotesk',sans-serif">The journey begins as a curious student, evolves through active participation, grows with taking initiative, matures through accepting responsibility, sharpens with skill development, and culminates in true leadership.</p>
+<div class="stg glass" style="margin-top:8px">
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">The journey begins as a curious student, evolves through active participation, grows with taking initiative, matures through accepting responsibility, sharpens with skill development, and culminates in true leadership.</p>
 </div>
 </div>
 <div class="col-img stg"><img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80" alt="Team collaboration"></div>
@@ -347,15 +429,14 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 7: REAL-LIFE EXAMPLE -->
-<div class="slide" data-i="6" data-tr="tr-depth" data-section="s1">
-<div class="slide-bg" data-bg="s1content"></div>
+<div class="slide" data-i="6" data-tr="tr-fade" data-section="s1">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
 <h2 class="stg gtext stitle">Real-Life Example</h2>
-<div class="stg glass" style="border-top:2px solid var(--gold)">
-<h4 style="font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:10px">The Student Council President</h4>
-<p style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;font-family:'Space Grotesk',sans-serif">A second-year student noticed that campus events were losing attendance. Instead of complaining, she organized a small team, surveyed 200 students, and proposed a new event format to the administration. Within one semester, attendance doubled. She did not wait for a title - she saw a problem and acted.</p>
+<div class="stg glass" style="border-top:3px solid var(--gold)">
+<h4 style="font-size:.9rem;font-weight:700;color:var(--gold);margin-bottom:8px">The Student Council President</h4>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">A second-year student noticed that campus events were losing attendance. Instead of complaining, she organized a small team, surveyed 200 students, and proposed a new event format to the administration. Within one semester, attendance doubled. She did not wait for a title - she saw a problem and acted.</p>
 </div>
 <div class="stg quote">"Leadership is not about waiting for the perfect moment. It is about creating it."</div>
 </div>
@@ -366,7 +447,6 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 
 <!-- SLIDE 8: MAIN IDEA -->
 <div class="slide" data-i="7" data-tr="tr-zoom" data-section="s1">
-<div class="slide-bg" data-bg="s1content"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -386,33 +466,30 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 9: SECTION 2 DIVIDER -->
-<div class="slide" data-i="8" data-tr="tr-morph" data-section="s2">
-<div class="slide-bg" data-bg="s2divider"></div>
+<div class="slide" data-i="8" data-tr="tr-depth" data-section="s2">
 <div class="slide-inner divider">
-<h2 class="stg gtext" style="font-size:2.8rem">Essential Leadership Skills</h2>
+<h2 class="stg gtext" style="font-size:2.6rem">Essential Leadership Skills</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Habiba Kamal</div>
 </div>
 </div>
 
 <!-- SLIDE 10: SKILLS OVERVIEW -->
-<div class="slide" data-i="9" data-tr="tr-cinema" data-section="s2">
-<div class="slide-bg" data-bg="s2content"></div>
+<div class="slide" data-i="9" data-tr="tr-slide" data-section="s2">
 <div class="slide-inner">
 <h2 class="stg gtext stitle">Skills Overview</h2>
-<p class="stg ssub" style="margin-bottom:18px">The five pillars of effective student leadership</p>
+<p class="stg ssub" style="margin-bottom:14px">The five pillars of effective student leadership</p>
 <div class="stg skills cg">
-<div class="stg scard"><div class="icon" style="background:var(--emerald)"><i class="fas fa-comments"></i></div><h4>Communication</h4><p>Expressing ideas clearly and listening actively</p></div>
-<div class="stg scard"><div class="icon" style="background:#7dbfa0"><i class="fas fa-people-group"></i></div><h4>Teamwork</h4><p>Collaborating effectively toward shared goals</p></div>
+<div class="stg scard"><div class="icon" style="background:var(--sec)"><i class="fas fa-comments"></i></div><h4>Communication</h4><p>Expressing ideas clearly and listening actively</p></div>
+<div class="stg scard"><div class="icon" style="background:#8fbfad"><i class="fas fa-people-group"></i></div><h4>Teamwork</h4><p>Collaborating effectively toward shared goals</p></div>
 <div class="stg scard"><div class="icon" style="background:var(--emerald)"><i class="fas fa-scale-balanced"></i></div><h4>Decision Making</h4><p>Choosing wisely under pressure and uncertainty</p></div>
-<div class="stg scard"><div class="icon" style="background:#5cb88a"><i class="fas fa-puzzle-piece"></i></div><h4>Problem Solving</h4><p>Finding creative solutions to complex challenges</p></div>
-<div class="stg scard"><div class="icon" style="background:#7dbfa0"><i class="fas fa-shield-halved"></i></div><h4>Confidence</h4><p>Trusting your abilities and inspiring others</p></div>
+<div class="stg scard"><div class="icon" style="background:#6e9a8b"><i class="fas fa-puzzle-piece"></i></div><h4>Problem Solving</h4><p>Finding creative solutions to complex challenges</p></div>
+<div class="stg scard"><div class="icon" style="background:#8fbfad"><i class="fas fa-shield-halved"></i></div><h4>Confidence</h4><p>Trusting your abilities and inspiring others</p></div>
 </div>
 </div>
 </div>
 
 <!-- SLIDE 11: COMMUNICATION -->
-<div class="slide" data-i="10" data-tr="tr-spatial" data-section="s2">
-<div class="slide-bg" data-bg="s2content"></div>
+<div class="slide" data-i="10" data-tr="tr-up" data-section="s2">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -432,8 +509,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 12: TEAMWORK -->
-<div class="slide" data-i="11" data-tr="tr-reveal" data-section="s2">
-<div class="slide-bg" data-bg="s2content"></div>
+<div class="slide" data-i="11" data-tr="tr-flip" data-section="s2">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -453,8 +529,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 13: DECISION MAKING -->
-<div class="slide" data-i="12" data-tr="tr-curtain" data-section="s2">
-<div class="slide-bg" data-bg="s2content"></div>
+<div class="slide" data-i="12" data-tr="tr-rotate" data-section="s2">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -474,8 +549,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 14: PROBLEM SOLVING -->
-<div class="slide" data-i="13" data-tr="tr-depth" data-section="s2">
-<div class="slide-bg" data-bg="s2content"></div>
+<div class="slide" data-i="13" data-tr="tr-scale" data-section="s2">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -495,8 +569,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 15: CONFIDENCE -->
-<div class="slide" data-i="14" data-tr="tr-hero" data-section="s2">
-<div class="slide-bg" data-bg="s2content"></div>
+<div class="slide" data-i="14" data-tr="tr-fade" data-section="s2">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -516,28 +589,26 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 16: SECTION 3 DIVIDER -->
-<div class="slide" data-i="15" data-tr="tr-morph" data-section="s3">
-<div class="slide-bg" data-bg="s3divider"></div>
+<div class="slide" data-i="15" data-tr="tr-zoom" data-section="s3">
 <div class="slide-inner divider">
-<h2 class="stg gtext" style="font-size:2.6rem">How to Become a Future Leader</h2>
+<h2 class="stg gtext" style="font-size:2.4rem">How to Become a Future Leader</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Mohamed Mostafa</div>
 </div>
 </div>
 
 <!-- SLIDE 17: TAKE INITIATIVE -->
-<div class="slide" data-i="16" data-tr="tr-cinema" data-section="s3">
-<div class="slide-bg" data-bg="s3content"></div>
+<div class="slide" data-i="16" data-tr="tr-slide" data-section="s3">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
-<h2 class="stg gtext stitle" style="font-size:1.9rem">Take Initiative and Accept Responsibility</h2>
-<div class="stg glass" style="border-top:2px solid var(--amber)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-rocket" style="color:var(--amber)"></i><h4 style="font-size:.92rem;font-weight:700;color:var(--amber)">Take Initiative</h4></div>
-<p style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;font-family:'Space Grotesk',sans-serif">Do not wait to be asked. Step up and volunteer for tasks and projects. Share your ideas and suggestions proactively. Leaders do not wait for permission - they create opportunities.</p>
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Take Initiative and Accept Responsibility</h2>
+<div class="stg glass" style="border-top:3px solid var(--sec)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-rocket" style="color:var(--sec)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--sec)">Take Initiative</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Do not wait to be asked. Step up and volunteer for tasks and projects. Share your ideas and suggestions proactively. Leaders do not wait for permission - they create opportunities.</p>
 </div>
-<div class="stg glass" style="border-top:2px solid var(--gold)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-handshake" style="color:var(--gold)"></i><h4 style="font-size:.92rem;font-weight:700;color:var(--gold)">Accept Responsibility</h4></div>
-<p style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;font-family:'Space Grotesk',sans-serif">Own your tasks and outcomes. Accountability builds trust and respect from your peers and supervisors. When things go wrong, a leader takes ownership and finds solutions.</p>
+<div class="stg glass" style="border-top:3px solid var(--accent)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-handshake" style="color:var(--accent)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--accent)">Accept Responsibility</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Own your tasks and outcomes. Accountability builds trust and respect from your peers and supervisors. When things go wrong, a leader takes ownership and finds solutions.</p>
 </div>
 </div>
 <div class="col-img stg"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="Team taking initiative"></div>
@@ -546,19 +617,18 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 18: TEAMWORK & MOTIVATION -->
-<div class="slide" data-i="17" data-tr="tr-spatial" data-section="s3">
-<div class="slide-bg" data-bg="s3content"></div>
+<div class="slide" data-i="17" data-tr="tr-up" data-section="s3">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
-<h2 class="stg gtext stitle" style="font-size:1.9rem">Build Teamwork and Stay Motivated</h2>
-<div class="stg glass" style="border-top:2px solid var(--emerald)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-people-group" style="color:var(--emerald)"></i><h4 style="font-size:.92rem;font-weight:700;color:var(--emerald)">Build Teamwork</h4></div>
-<p style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;font-family:'Space Grotesk',sans-serif">Collaborate and support others. Great leaders lift everyone up and create an environment where everyone can contribute. Your success is measured by your team success.</p>
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Build Teamwork and Stay Motivated</h2>
+<div class="stg glass" style="border-top:3px solid var(--emerald)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-people-group" style="color:var(--emerald)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--emerald)">Build Teamwork</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Collaborate and support others. Great leaders lift everyone up and create an environment where everyone can contribute. Your success is measured by your team success.</p>
 </div>
-<div class="stg glass" style="border-top:2px solid var(--amber)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-fire" style="color:var(--amber)"></i><h4 style="font-size:.92rem;font-weight:700;color:var(--amber)">Stay Motivated</h4></div>
-<p style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;font-family:'Space Grotesk',sans-serif">Keep your vision alive even when facing obstacles. Set clear goals and remind yourself why you started. Motivation is the fuel that keeps you going when things get tough.</p>
+<div class="stg glass" style="border-top:3px solid var(--sec)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-fire" style="color:var(--sec)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--sec)">Stay Motivated</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Keep your vision alive even when facing obstacles. Set clear goals and remind yourself why you started. Motivation is the fuel that keeps you going when things get tough.</p>
 </div>
 </div>
 <div class="col-img stg"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" alt="Team collaboration"></div>
@@ -568,18 +638,17 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 
 <!-- SLIDE 19: MISTAKES & LISTENING -->
 <div class="slide" data-i="18" data-tr="tr-depth" data-section="s3">
-<div class="slide-bg" data-bg="s3content"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
-<h2 class="stg gtext stitle" style="font-size:1.9rem">Learn from Mistakes and Be a Good Listener</h2>
-<div class="stg glass" style="border-top:2px solid var(--rose)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-graduation-cap" style="color:var(--rose)"></i><h4 style="font-size:.92rem;font-weight:700;color:var(--rose)">Learn from Mistakes</h4></div>
-<p style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;font-family:'Space Grotesk',sans-serif">Every failure is a lesson. Embrace growth through experience and do not be afraid to try new approaches. The best leaders have failed the most - they just never stopped learning.</p>
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Learn from Mistakes and Be a Good Listener</h2>
+<div class="stg glass" style="border-top:3px solid var(--rose)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-graduation-cap" style="color:var(--rose)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--rose)">Learn from Mistakes</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Every failure is a lesson. Embrace growth through experience and do not be afraid to try new approaches. The best leaders have failed the most - they just never stopped learning.</p>
 </div>
-<div class="stg glass" style="border-top:2px solid var(--amber)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-ear-listen" style="color:var(--amber)"></i><h4 style="font-size:.92rem;font-weight:700;color:var(--amber)">Be a Good Listener</h4></div>
-<p style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;font-family:'Space Grotesk',sans-serif">Pay attention to what others say. Understanding different perspectives helps you make better decisions. Active listening is a superpower that most leaders underestimate.</p>
+<div class="stg glass" style="border-top:3px solid var(--sec)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-ear-listen" style="color:var(--sec)"></i><h4 style="font-size:.9rem;font-weight:700;color:var(--sec)">Be a Good Listener</h4></div>
+<p style="font-size:.88rem;color:var(--text-muted);line-height:1.6">Pay attention to what others say. Understanding different perspectives helps you make better decisions. Active listening is a superpower that most leaders underestimate.</p>
 </div>
 </div>
 <div class="col-img stg"><img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80" alt="Active listening"></div>
@@ -588,8 +657,7 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 20: COMMUNICATION SKILLS -->
-<div class="slide" data-i="19" data-tr="tr-reveal" data-section="s3">
-<div class="slide-bg" data-bg="s3content"></div>
+<div class="slide" data-i="19" data-tr="tr-flip" data-section="s3">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
@@ -600,8 +668,8 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 <li><i class="fas fa-angle-right"></i><div><strong>Audience Awareness:</strong> Learn to adapt your message to different audiences</div></li>
 <li><i class="fas fa-angle-right"></i><div><strong>Feedback Mastery:</strong> Master the art of giving and receiving constructive feedback</div></li>
 </ul>
-<div class="stg glass" style="margin-top:8px;border-top:2px solid var(--amber)">
-<h4 style="font-size:.88rem;font-weight:700;color:var(--amber);margin-bottom:8px">All 8 Steps at a Glance</h4>
+<div class="stg glass" style="margin-top:6px;border-top:3px solid var(--sec)">
+<h4 style="font-size:.85rem;font-weight:700;color:var(--sec);margin-bottom:6px">All 8 Steps at a Glance</h4>
 <div class="flow">
 <span class="step">Initiative</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
 <span class="step">Responsibility</span><span class="arr"><i class="fas fa-arrow-right"></i></span>
@@ -620,21 +688,19 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 21: SECTION 4 DIVIDER -->
-<div class="slide" data-i="20" data-tr="tr-morph" data-section="s4">
-<div class="slide-bg" data-bg="s4divider"></div>
+<div class="slide" data-i="20" data-tr="tr-rotate" data-section="s4">
 <div class="slide-inner divider">
-<h2 class="stg gtext" style="font-size:2.8rem">Challenges Students Face</h2>
+<h2 class="stg gtext" style="font-size:2.6rem">Challenges Students Face</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Roqia Wael</div>
 </div>
 </div>
 
 <!-- SLIDE 22: CHALLENGE 1 -->
-<div class="slide" data-i="21" data-tr="tr-cinema" data-section="s4">
-<div class="slide-bg" data-bg="s4content"></div>
+<div class="slide" data-i="21" data-tr="tr-zoom" data-section="s4">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
-<h2 class="stg gtext stitle" style="font-size:1.9rem">Challenge 1: Fear of Commitment</h2>
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Challenge 1: Fear of Commitment</h2>
 <div class="stg cbox problem">
 <div class="label"><i class="fas fa-triangle-exclamation"></i>Problem</div>
 <p>Year-long roles burn students out and scare them off from taking leadership positions. The sheer time commitment feels overwhelming alongside academics and personal life.</p>
@@ -650,12 +716,11 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 23: CHALLENGE 2 -->
-<div class="slide" data-i="22" data-tr="tr-spatial" data-section="s4">
-<div class="slide-bg" data-bg="s4content"></div>
+<div class="slide" data-i="22" data-tr="tr-up" data-section="s4">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
-<h2 class="stg gtext stitle" style="font-size:1.9rem">Challenge 2: Fear of Failure</h2>
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Challenge 2: Fear of Failure</h2>
 <div class="stg cbox problem">
 <div class="label"><i class="fas fa-triangle-exclamation"></i>Problem</div>
 <p>Students are terrified of making mistakes in public and being judged by their peers. This fear paralyzes them from taking risks or sharing bold ideas.</p>
@@ -671,12 +736,11 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 24: CHALLENGE 3 -->
-<div class="slide" data-i="23" data-tr="tr-reveal" data-section="s4">
-<div class="slide-bg" data-bg="s4content"></div>
+<div class="slide" data-i="23" data-tr="tr-fade" data-section="s4">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
-<h2 class="stg gtext stitle" style="font-size:1.9rem">Challenge 3: Lack of Experience</h2>
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Challenge 3: Lack of Experience</h2>
 <div class="stg cbox problem">
 <div class="label"><i class="fas fa-triangle-exclamation"></i>Problem</div>
 <p>Real-world processes and administrative rules intimidate new leaders who feel unprepared for the complexities of formal leadership roles.</p>
@@ -692,26 +756,24 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 25: SECTION 5 DIVIDER -->
-<div class="slide" data-i="24" data-tr="tr-morph" data-section="s5">
-<div class="slide-bg" data-bg="s5divider"></div>
+<div class="slide" data-i="24" data-tr="tr-scale" data-section="s5">
 <div class="slide-inner divider">
-<h2 class="stg gtext" style="font-size:2.8rem">The Ripple Effect</h2>
+<h2 class="stg gtext" style="font-size:2.6rem">The Ripple Effect</h2>
 <div class="stg tag"><i class="fas fa-microphone"></i>Farah Amr</div>
 </div>
 </div>
 
 <!-- SLIDE 26: INDIVIDUAL TRANSFORMATION -->
-<div class="slide" data-i="25" data-tr="tr-cinema" data-section="s5">
-<div class="slide-bg" data-bg="s5content"></div>
+<div class="slide" data-i="25" data-tr="tr-slide" data-section="s5">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
-<h2 class="stg gtext stitle" style="font-size:1.9rem">Individual Transformation</h2>
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Individual Transformation</h2>
 <div class="stg ripple-grid cg">
-<div class="stg rcard"><div class="icon" style="background:var(--violet)"><i class="fas fa-brain"></i></div><h4>Emotional Intelligence</h4><p>Developing deep empathy and self-awareness under pressure</p></div>
+<div class="stg rcard"><div class="icon" style="background:var(--sec)"><i class="fas fa-brain"></i></div><h4>Emotional Intelligence</h4><p>Developing deep empathy and self-awareness under pressure</p></div>
 <div class="stg rcard"><div class="icon" style="background:#a89bde"><i class="fas fa-rocket"></i></div><h4>Skill Acceleration</h4><p>Mastering public speaking, negotiation, and conflict resolution</p></div>
 <div class="stg rcard"><div class="icon" style="background:var(--emerald)"><i class="fas fa-mountain"></i></div><h4>Self-Efficacy</h4><p>Proving personal agency by turning abstract ideas into tangible reality</p></div>
-<div class="stg rcard"><div class="icon" style="background:var(--violet)"><i class="fas fa-compass"></i></div><h4>Ethical Grounding</h4><p>Defining personal values and boundaries early in life</p></div>
+<div class="stg rcard"><div class="icon" style="background:#8b7ec8"><i class="fas fa-compass"></i></div><h4>Ethical Grounding</h4><p>Defining personal values and boundaries early in life</p></div>
 </div>
 </div>
 <div class="col-img stg"><img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&q=80" alt="Team brainstorming"></div>
@@ -721,16 +783,15 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 
 <!-- SLIDE 27: TEAM DYNAMIC -->
 <div class="slide" data-i="26" data-tr="tr-depth" data-section="s5">
-<div class="slide-bg" data-bg="s5content"></div>
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
-<h2 class="stg gtext stitle" style="font-size:1.9rem">Team Dynamic</h2>
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Team Dynamic</h2>
 <div class="stg ripple-grid cg">
-<div class="stg rcard"><div class="icon" style="background:var(--violet)"><i class="fas fa-handshake"></i></div><h4>Leading Without Authority</h4><p>Relying on inspiration and shared vision rather than financial incentives</p></div>
+<div class="stg rcard"><div class="icon" style="background:var(--sec)"><i class="fas fa-handshake"></i></div><h4>Leading Without Authority</h4><p>Relying on inspiration and shared vision rather than financial incentives</p></div>
 <div class="stg rcard"><div class="icon" style="background:#a89bde"><i class="fas fa-shield-heart"></i></div><h4>Psychological Safety</h4><p>Creating inclusive spaces where peers can voice dissent and fail forward</p></div>
 <div class="stg rcard"><div class="icon" style="background:var(--emerald)"><i class="fas fa-diagram-project"></i></div><h4>Synthesizing Chaos</h4><p>Turning fragmented peer ideas into unified, actionable goals</p></div>
-<div class="stg rcard"><div class="icon" style="background:var(--violet)"><i class="fas fa-users-gear"></i></div><h4>The Talent Pipeline</h4><p>Mentoring the next generation to ensure long-term organizational survival</p></div>
+<div class="stg rcard"><div class="icon" style="background:#8b7ec8"><i class="fas fa-users-gear"></i></div><h4>The Talent Pipeline</h4><p>Mentoring the next generation to ensure long-term organizational survival</p></div>
 </div>
 </div>
 <div class="col-img stg"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="Team working together"></div>
@@ -739,16 +800,15 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 28: SOCIETAL IMPACT -->
-<div class="slide" data-i="27" data-tr="tr-curtain" data-section="s5">
-<div class="slide-bg" data-bg="s5content"></div>
+<div class="slide" data-i="27" data-tr="tr-rotate" data-section="s5">
 <div class="slide-inner">
 <div class="two-col">
 <div class="col-text">
-<h2 class="stg gtext stitle" style="font-size:1.9rem">Societal Impact</h2>
+<h2 class="stg gtext stitle" style="font-size:1.8rem">Societal Impact</h2>
 <div class="stg ripple-grid cg">
 <div class="stg rcard"><div class="icon" style="background:var(--rose)"><i class="fas fa-fire"></i></div><h4>Unburdened Idealism</h4><p>Challenging stagnant status quos that older generations accept</p></div>
 <div class="stg rcard"><div class="icon" style="background:var(--emerald)"><i class="fas fa-seedling"></i></div><h4>Grassroots Innovation</h4><p>Launching agile, community-first solutions without corporate bureaucracy</p></div>
-<div class="stg rcard"><div class="icon" style="background:var(--gold)"><i class="fas fa-building-columns"></i></div><h4>Institutional Accountability</h4><p>Bridging the gap between the public and powerful administrations</p></div>
+<div class="stg rcard"><div class="icon" style="background:var(--sec)"><i class="fas fa-building-columns"></i></div><h4>Institutional Accountability</h4><p>Bridging the gap between the public and powerful administrations</p></div>
 <div class="stg rcard"><div class="icon" style="background:#a89bde"><i class="fas fa-globe"></i></div><h4>Future Global Pipeline</h4><p>Cultivating the ethical politicians, conscious CEOs, and organizers of tomorrow</p></div>
 </div>
 </div>
@@ -758,16 +818,15 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 29: KEY TAKEAWAYS -->
-<div class="slide" data-i="28" data-tr="tr-zoom">
-<div class="slide-bg" data-bg="takeaways"></div>
+<div class="slide" data-i="28" data-tr="tr-zoom" data-section="">
 <div class="slide-inner">
 <h2 class="stg gtext stitle">Key Takeaways</h2>
-<p class="stg ssub" style="margin-bottom:18px">What to remember from today presentation</p>
+<p class="stg ssub" style="margin-bottom:14px">What to remember from today presentation</p>
 <div class="stg tkgrid cg">
 <div class="stg tkcard"><div class="icon" style="background:var(--gold)"><i class="fas fa-compass"></i></div><h4>Start Now</h4><p>Leadership begins with the first step. Do not wait for the perfect moment.</p></div>
-<div class="stg tkcard"><div class="icon" style="background:var(--emerald)"><i class="fas fa-book-open"></i></div><h4>Learn Constantly</h4><p>Every experience is a lesson. Embrace failures as teachers.</p></div>
-<div class="stg tkcard"><div class="icon" style="background:var(--amber)"><i class="fas fa-people-group"></i></div><h4>Build Teams</h4><p>Great leaders lift others up. Collaboration creates lasting impact.</p></div>
-<div class="stg tkcard"><div class="icon" style="background:var(--violet)"><i class="fas fa-comments"></i></div><h4>Communicate</h4><p>Clear communication is the backbone of every successful leader.</p></div>
+<div class="stg tkcard"><div class="icon" style="background:#6e9a8b"><i class="fas fa-book-open"></i></div><h4>Learn Constantly</h4><p>Every experience is a lesson. Embrace failures as teachers.</p></div>
+<div class="stg tkcard"><div class="icon" style="background:#c4863a"><i class="fas fa-people-group"></i></div><h4>Build Teams</h4><p>Great leaders lift others up. Collaboration creates lasting impact.</p></div>
+<div class="stg tkcard"><div class="icon" style="background:#8b7ec8"><i class="fas fa-comments"></i></div><h4>Communicate</h4><p>Clear communication is the backbone of every successful leader.</p></div>
 <div class="stg tkcard"><div class="icon" style="background:var(--rose)"><i class="fas fa-bolt"></i></div><h4>Be Resilient</h4><p>Bounce back from setbacks. Resilience is built through challenge.</p></div>
 <div class="stg tkcard"><div class="icon" style="background:var(--emerald)"><i class="fas fa-water"></i></div><h4>Think Big</h4><p>Your actions create ripples that extend far beyond yourself.</p></div>
 </div>
@@ -775,19 +834,18 @@ h1,h2,h3,h4,h5,h6{font-family:"Playfair Display",serif;font-weight:700}
 </div>
 
 <!-- SLIDE 30: THANK YOU -->
-<div class="slide" data-i="29" data-tr="tr-hero">
-<div class="slide-bg" data-bg="thankyou"></div>
+<div class="slide" data-i="29" data-tr="tr-depth" data-section="">
 <div class="slide-inner divider">
-<h1 class="stg gtext" style="font-size:3.6rem">Thank You</h1>
-<p class="stg" style="font-size:1.1rem;color:var(--text-secondary);margin-bottom:16px;font-family:'Space Grotesk',sans-serif;font-weight:300">The future belongs to those who lead today.</p>
+<h1 class="stg gtext" style="font-size:3.2rem">Thank You</h1>
+<p class="stg" style="font-size:1.1rem;color:var(--text-muted);margin-bottom:12px">The future belongs to those who lead today.</p>
 <div class="stg team-list" style="justify-content:center">
 <span class="tm"><i class="fas fa-user-circle" style="color:var(--gold)"></i>Habiba Mohamed</span>
-<span class="tm"><i class="fas fa-user-circle" style="color:var(--emerald)"></i>Habiba Kamal</span>
-<span class="tm"><i class="fas fa-user-circle" style="color:var(--amber)"></i>Mohamed Mostafa</span>
+<span class="tm"><i class="fas fa-user-circle" style="color:#6e9a8b"></i>Habiba Kamal</span>
+<span class="tm"><i class="fas fa-user-circle" style="color:#c4863a"></i>Mohamed Mostafa</span>
 <span class="tm"><i class="fas fa-user-circle" style="color:var(--rose)"></i>Roqia Wael</span>
-<span class="tm"><i class="fas fa-user-circle" style="color:var(--violet)"></i>Farah Amr</span>
+<span class="tm"><i class="fas fa-user-circle" style="color:#8b7ec8"></i>Farah Amr</span>
 </div>
-<div class="stg" style="font-size:.78rem;color:var(--text-dim);margin-top:14px;font-family:'Space Grotesk',sans-serif;letter-spacing:.1em">Questions and Discussion</div>
+<div class="stg" style="font-size:.8rem;color:var(--text-dim);margin-top:10px">Questions and Discussion</div>
 </div>
 </div>
 
@@ -824,7 +882,7 @@ if(next<0||next>=total)return;
 animating=true;
 
 const nw=slides[next];
-const tr=nw.getAttribute('data-tr')||'tr-cinema';
+const tr=nw.getAttribute('data-tr')||'tr-slide';
 const sec=nw.getAttribute('data-section')||'';
 setTransition(tr);
 
@@ -839,7 +897,7 @@ if(sec)nw.classList.add(sec);
 void nw.offsetWidth;
 nw.querySelectorAll('.stg').forEach(e=>{e.style.animation='';e.style.opacity=''});
 cur=next;updateUI();
-setTimeout(()=>{animating=false;old.classList.remove('exit')},1000);
+setTimeout(()=>{animating=false;old.classList.remove('exit')},900);
 }
 
 document.addEventListener('keydown',e=>{
@@ -857,188 +915,299 @@ if(!document.fullscreenElement)document.documentElement.requestFullscreen().catc
 else document.exitFullscreen();
 }
 
-/* ===== CINEMATIC SCENE CANVAS ===== */
-const canvas=document.getElementById('sceneCanvas'),ctx=canvas.getContext('2d');
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
 let W,H;
 function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
 window.addEventListener('resize',resize);resize();
 
-let mouseX=W/2,mouseY=H/2;
+/* ===== VIDEO BACKGROUND HANDLER ===== */
+const bgVideo=document.getElementById('bgVideo');
+if(bgVideo){
+bgVideo.addEventListener('canplay',()=>{bgVideo.classList.add('loaded')});
+bgVideo.addEventListener('error',()=>{bgVideo.style.display='none'});
+}
+
+let mouseX=W/2,mouseY=H/2,pmouseX=mouseX,pmouseY=mouseY;
 document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});
 
-/* ===== PARTICLE SYSTEM ===== */
-const particles=[];
-const PCOUNT=60;
-const PCOLORS=['rgba(212,168,83,','rgba(92,184,138,','rgba(212,135,58,','rgba(196,122,106,','rgba(139,126,200,'];
+/* ===== SYSTEM 1: NEURAL NETWORK CONSTELLATION ===== */
+const nodes=[];
+const NODE_COUNT=70;
+const CONNECT_DIST=160;
+const NODE_COLORS=['rgba(200,169,110,','rgba(110,154,139,','rgba(196,134,58,','rgba(139,126,200,'];
 
-class Particle{
-constructor(){this.reset()}
-reset(){
+class Node{
+constructor(){
 this.x=Math.random()*W;this.y=Math.random()*H;
-this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;
-this.r=Math.random()*1.5+.5;
-this.ci=Math.floor(Math.random()*PCOLORS.length);
-this.phase=Math.random()*Math.PI*2;
-this.pspeed=.01+Math.random()*.015;
+this.vx=(Math.random()-.5)*.6;this.vy=(Math.random()-.5)*.6;
+this.r=Math.random()*2.5+.8;
+this.colorIdx=Math.floor(Math.random()*NODE_COLORS.length);
+this.pulse=Math.random()*Math.PI*2;
+this.pulseSpeed=.02+Math.random()*.02;
 this.energy=0;
-this.orbitR=50+Math.random()*150;
-this.orbitSpeed=.002+Math.random()*.003;
-this.orbitAngle=Math.random()*Math.PI*2;
-this.orbitCx=W*.2+Math.random()*W*.6;
-this.orbitCy=H*.2+Math.random()*H*.6;
-this.useOrbit=Math.random()>.6;
 }
 update(){
-this.phase+=this.pspeed;
+this.pulse+=this.pulseSpeed;
 const dx=mouseX-this.x,dy=mouseY-this.y,dist=Math.sqrt(dx*dx+dy*dy);
-if(dist<250){
-const f=(250-dist)/250;
-this.energy=Math.min(this.energy+.03,1);
-this.vx+=dx/dist*f*.08;
-this.vy+=dy/dist*f*.08;
-}else{this.energy*=.96}
-if(this.useOrbit){
-this.orbitAngle+=this.orbitSpeed;
-this.x=this.orbitCx+Math.cos(this.orbitAngle)*this.orbitR;
-this.y=this.orbitCy+Math.sin(this.orbitAngle)*this.orbitR*.4;
-}else{
-this.vx*=.995;this.vy*=.995;
+if(dist<200){
+const force=(200-dist)/200*.8;
+this.vx+=dx/dist*force*.15;
+this.vy+=dy/dist*force*.15;
+this.energy=Math.min(this.energy+.05,1);
+}else{this.energy*=.97}
+this.vx*=.99;this.vy*=.99;
 this.x+=this.vx;this.y+=this.vy;
 if(this.x<0||this.x>W)this.vx*=-1;
 if(this.y<0||this.y>H)this.vy*=-1;
 }
-}
 draw(){
-const pa=Math.sin(this.phase)*.3+.7;
-const a=(.15+this.energy*.35)*pa;
-const r=this.r+this.energy*1.5;
+const pulseA=Math.sin(this.pulse)*.3+.7;
+const a=(.3+this.energy*.5)*pulseA;
+const r=this.r+this.energy*2;
 ctx.beginPath();ctx.arc(this.x,this.y,r,0,Math.PI*2);
-ctx.fillStyle=PCOLORS[this.ci]+a+')';ctx.fill();
-if(this.energy>.4){
-ctx.beginPath();ctx.arc(this.x,this.y,r+3,0,Math.PI*2);
-ctx.fillStyle=PCOLORS[this.ci]+(this.energy*.1)+')';ctx.fill();
+ctx.fillStyle=NODE_COLORS[this.colorIdx]+a+')';ctx.fill();
+if(this.energy>.3){
+ctx.beginPath();ctx.arc(this.x,this.y,r+4,0,Math.PI*2);
+ctx.fillStyle=NODE_COLORS[this.colorIdx]+(this.energy*.15)+')';ctx.fill();
 }
 }
 }
-for(let i=0;i<PCOUNT;i++)particles.push(new Particle());
 
-/* ===== FLOATING WORDS ===== */
-const kw=['Leadership','Growth','Initiative','Teamwork','Vision','Skills','Innovation','Resilience','Future','Impact','Courage','Trust','Empower','Inspire','Change'];
-const words=[];
-class Word{
+for(let i=0;i<NODE_COUNT;i++)nodes.push(new Node());
+
+/* ===== SYSTEM 2: FLOATING KEYWORDS ===== */
+const keywords=['Leadership','Growth','Initiative','Teamwork','Vision','Skills','Innovation','Resilience','Future','Impact','Courage','Trust','Vision','Empower','Inspire'];
+const floatingWords=[];
+class FloatingWord{
 constructor(){
-this.t=kw[Math.floor(Math.random()*kw.length)];
+this.text=keywords[Math.floor(Math.random()*keywords.length)];
 this.x=Math.random()*W;this.y=Math.random()*H;
-this.vx=(Math.random()-.5)*.2;this.vy=(Math.random()-.5)*.1;
-this.sz=9+Math.random()*6;this.a=0;this.ma=.04+Math.random()*.03;
-this.life=0;this.ml=400+Math.random()*500;
-this.ang=Math.random()*.2-.1;
+this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.15;
+this.size=10+Math.random()*8;this.alpha=0;this.maxAlpha=.06+Math.random()*.04;
+this.life=0;this.maxLife=300+Math.random()*400;
+this.angle=Math.random()*.3-.15;
 }
 update(){
 this.life++;this.x+=this.vx;this.y+=this.vy;
-if(this.life<80)this.a=this.ma*(this.life/80);
-else if(this.life>this.ml-80)this.a=this.ma*((this.ml-this.life)/80);
-else this.a=this.ma;
-if(this.life>=this.ml){this.life=0;this.x=Math.random()*W;this.y=Math.random()*H}
+const t=this.life/this.maxAlpha;
+if(this.life<60)this.alpha=this.maxAlpha*(this.life/60);
+else if(this.life>this.maxLife-60)this.alpha=this.maxAlpha*((this.maxLife-this.life)/60);
+else this.alpha=this.maxAlpha;
+if(this.life>=this.maxLife){this.life=0;this.x=Math.random()*W;this.y=Math.random()*H}
 }
 draw(){
-if(this.a<=0)return;
-ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.ang);
-ctx.font=`300 ${this.sz}px "Space Grotesk",sans-serif`;
-ctx.fillStyle=`rgba(212,168,83,${this.a})`;
-ctx.textAlign='center';ctx.fillText(this.t,0,0);
+if(this.alpha<=0)return;
+ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.angle);
+ctx.font=`300 ${this.size}px "Poppins",sans-serif`;
+ctx.fillStyle=`rgba(200,169,110,${this.alpha})`;
+ctx.textAlign='center';ctx.fillText(this.text,0,0);
 ctx.restore();
 }
 }
-for(let i=0;i<12;i++)words.push(new Word());
+for(let i=0;i<15;i++)floatingWords.push(new FloatingWord());
 
-/* ===== WAVE MESH ===== */
-const wp=[];const WC=20;const WR=6;
-for(let i=0;i<WC;i++){wp[i]=[];for(let j=0;j<WR;j++)wp[i][j]={x:0,y:0}}
-let wt=0;
-function drawWave(){
-wt+=.012;
-const sx=W/(WC-1);const sy=100;const sy0=H*.75;
-for(let i=0;i<WC;i++){
-for(let j=0;j<WR;j++){
-const bx=i*sx;const by=sy0+j*sy;
-const w1=Math.sin(i*.35+wt*1.8)*12;
-const w2=Math.cos(j*.6+wt*1.3)*6;
-const md=Math.sqrt((mouseX-bx)**2+(mouseY-by)**2);
-const mi=Math.max(0,1-md/300)*20;
-wp[i][j].x=bx+w1+mi*(mouseX>bx?.2:-.2);
-wp[i][j].y=by+w2+mi*(mouseY>by?.2:-.2);
+/* ===== SYSTEM 3: WAVE MESH ===== */
+const wavePoints=[];
+const WAVE_COLS=25;const WAVE_ROWS=8;
+for(let i=0;i<WAVE_COLS;i++){
+wavePoints[i]=[];
+for(let j=0;j<WAVE_ROWS;j++){
+wavePoints[i][j]={x:0,y:0,baseX:0,baseY:0};
 }
 }
-for(let i=0;i<WC-1;i++){
-for(let j=0;j<WR-1;j++){
-const p1=wp[i][j],p2=wp[i+1][j],p3=wp[i][j+1],p4=wp[i+1][j+1];
-const a=.018+Math.sin(wt+i*.15)*.008;
-ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.lineTo(p4.x,p4.y);ctx.lineTo(p3.x,p3.y);ctx.closePath();
-ctx.strokeStyle=`rgba(212,168,83,${a})`;ctx.lineWidth=.5;ctx.stroke();
-}
-}
-}
+let waveTime=0;
 
-/* ===== CONSTELLATION LINES ===== */
-function drawConstellation(){
-for(let i=0;i<particles.length;i++){
-const p=particles[i];
-for(let j=i+1;j<particles.length;j++){
-const q=particles[j];
-const dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
-if(d<140){
-const a=(1-d/140)*.06*(.5+p.energy*.5+q.energy*.5);
-ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
-ctx.strokeStyle=`rgba(212,168,83,${a})`;ctx.lineWidth=.4;ctx.stroke();
+function drawWaveMesh(){
+waveTime+=.015;
+const spacingX=W/(WAVE_COLS-1);
+const spacingY=120;
+const startY=H*.7;
+for(let i=0;i<WAVE_COLS;i++){
+for(let j=0;j<WAVE_ROWS;j++){
+const bx=i*spacingX;
+const by=startY+j*spacingY;
+const wave1=Math.sin(i*.3+waveTime*2)*15;
+const wave2=Math.cos(j*.5+waveTime*1.5)*8;
+const mouseDist=Math.sqrt((mouseX-bx)**2+(mouseY-by)**2);
+const mouseInfluence=Math.max(0,1-mouseDist/250)*30;
+wavePoints[i][j].baseX=bx;wavePoints[i][j].baseY=by;
+wavePoints[i][j].x=bx+wave1+mouseInfluence*(mouseX>bx?.3:-.3);
+wavePoints[i][j].y=by+wave2+mouseInfluence*(mouseY>by?.3:-.3);
 }
 }
-const mdx=mouseX-p.x,mdy=mouseY-p.y,md=Math.sqrt(mdx*mdx+mdy*mdy);
-if(md<220){
-const a=(1-md/220)*.1;
-ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(mouseX,mouseY);
-ctx.strokeStyle=`rgba(212,168,83,${a})`;ctx.lineWidth=.6;ctx.stroke();
+for(let i=0;i<WAVE_COLS-1;i++){
+for(let j=0;j<WAVE_ROWS-1;j++){
+const p1=wavePoints[i][j],p2=wavePoints[i+1][j],p3=wavePoints[i][j+1];
+const alpha=.03+Math.sin(waveTime+i*.2)*.015;
+ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.lineTo(p2.x,wavePoints[i+1][j+1].y);ctx.lineTo(p3.x,p3.y);ctx.closePath();
+ctx.strokeStyle=`rgba(200,169,110,${alpha})`;ctx.lineWidth=.8;ctx.stroke();
+}
+}
+for(let i=0;i<WAVE_COLS;i++){
+for(let j=0;j<WAVE_ROWS;j++){
+const p=wavePoints[i][j];
+ctx.beginPath();ctx.arc(p.x,p.y,1.5,0,Math.PI*2);
+ctx.fillStyle=`rgba(200,169,110,${.08+Math.sin(waveTime+i*.5)*.03})`;ctx.fill();
 }
 }
 }
 
-/* ===== MAIN LOOP ===== */
+/* ===== SYSTEM 4: ORBITING RINGS ===== */
+const orbits=[
+{cx:W*.15,cy:H*.3,rx:120,ry:40,speed:.008,color:'rgba(200,169,110,0.08)',dots:30,angle:0},
+{cx:W*.85,cy:H*.65,rx:100,ry:35,speed:-.01,color:'rgba(110,154,139,0.06)',dots:25,angle:0},
+{cx:W*.5,cy:H*.2,rx:150,ry:50,speed:.006,color:'rgba(139,126,200,0.05)',dots:35,angle:Math.PI/3},
+];
+
+function drawOrbits(){
+orbits.forEach(o=>{
+o.angle+=o.speed;
+const mouseDist=Math.sqrt((mouseX-o.cx)**2+(mouseY-o.cy)**2);
+const mousePull=Math.max(0,1-mouseDist/300)*.3;
+for(let i=0;i<o.dots;i++){
+const a=(Math.PI*2/o.dots)*i+o.angle;
+const pullX=(mouseX-o.cx)*mousePull*.1;
+const pullY=(mouseY-o.cy)*mousePull*.1;
+const x=o.cx+Math.cos(a)*o.rx+pullX;
+const y=o.cy+Math.sin(a)*o.ry+pullY;
+const dotAlpha=.3+Math.sin(a+o.angle*2)*.2;
+ctx.beginPath();ctx.arc(x,y,1.2+Math.sin(a*3)*.5,0,Math.PI*2);
+ctx.fillStyle=o.color.replace(/[\d.]+\)$/,dotAlpha+')');ctx.fill();
+}
+ctx.beginPath();ctx.ellipse(o.cx,o.cy,o.rx,o.ry,0,0,Math.PI*2);
+ctx.strokeStyle=o.color;ctx.lineWidth=.5;ctx.stroke();
+});
+}
+
+/* ===== SYSTEM 5: ENERGY BURST ON CLICK ===== */
+const bursts=[];
+document.addEventListener('click',e=>{
+for(let i=0;i<20;i++){
+const a=Math.PI*2/20*i;
+const speed=2+Math.random()*4;
+bursts.push({x:e.clientX,y:e.clientY,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,life:1,r:1.5+Math.random()*2});
+}
+});
+
+function drawBursts(){
+for(let i=bursts.length-1;i>=0;i--){
+const b=bursts[i];
+b.x+=b.vx;b.y+=b.vy;b.vx*=.96;b.vy*=.96;b.life-=.025;
+if(b.life<=0){bursts.splice(i,1);continue}
+ctx.beginPath();ctx.arc(b.x,b.y,b.r*b.life,0,Math.PI*2);
+ctx.fillStyle=`rgba(200,169,110,${b.life*.6})`;ctx.fill();
+}
+}
+
+/* ===== MAIN ANIMATION LOOP ===== */
 function animate(){
 ctx.clearRect(0,0,W,H);
-drawWave();
-drawConstellation();
-particles.forEach(p=>{p.update();p.draw()});
-words.forEach(w=>{w.update();w.draw()});
-const g=ctx.createRadialGradient(mouseX,mouseY,0,mouseX,mouseY,180);
-g.addColorStop(0,'rgba(212,168,83,0.03)');g.addColorStop(1,'transparent');
-ctx.fillStyle=g;ctx.fillRect(mouseX-180,mouseY-180,360,360);
+
+/* Wave mesh first (background layer) */
+drawWaveMesh();
+
+/* Orbiting rings */
+drawOrbits();
+
+/* Neural network connections */
+for(let i=0;i<nodes.length;i++){
+nodes[i].update();nodes[i].draw();
+for(let j=i+1;j<nodes.length;j++){
+const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);
+if(d<CONNECT_DIST){
+const a=(1-d/CONNECT_DIST)*.12*(.5+nodes[i].energy*.5+nodes[j].energy*.5);
+ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);
+ctx.strokeStyle=`rgba(200,169,110,${a})`;ctx.lineWidth=.6;ctx.stroke();
+}
+}
+/* Mouse connections */
+const mdx=mouseX-nodes[i].x,mdy=mouseY-nodes[i].y,md=Math.sqrt(mdx*mdx+mdy*mdy);
+if(md<200){
+const a=(1-md/200)*.15;
+ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(mouseX,mouseY);
+ctx.strokeStyle=`rgba(200,169,110,${a})`;ctx.lineWidth=.8;ctx.stroke();
+}
+}
+
+/* Floating keywords */
+floatingWords.forEach(w=>{w.update();w.draw()});
+
+/* Energy bursts */
+drawBursts();
+
+/* Mouse glow on canvas */
+const grad=ctx.createRadialGradient(mouseX,mouseY,0,mouseX,mouseY,150);
+grad.addColorStop(0,'rgba(200,169,110,0.04)');grad.addColorStop(1,'transparent');
+ctx.fillStyle=grad;ctx.fillRect(mouseX-150,mouseY-150,300,300);
+
+pmouseX=mouseX;pmouseY=mouseY;
 requestAnimationFrame(animate);
 }
 animate();
 
-/* ===== CARD HOVER ===== */
+/* ===== MOUSE PARALLAX on 3D scene ===== */
+const scene3d=document.querySelector('.scene-3d');
+let mx=0,my=0,tmx=0,tmy=0;
+document.addEventListener('mousemove',e=>{
+tmx=(e.clientX/window.innerWidth-.5)*2;
+tmy=(e.clientY/window.innerHeight-.5)*2;
+});
+(function parallax(){
+mx+=(tmx-mx)*.06;
+my+=(tmy-my)*.06;
+const cubes=scene3d.querySelectorAll('.cube-wire');
+cubes.forEach((c,i)=>{
+const depth=(i+1)*8;
+c.style.transform=c.style.transform||'';
+c.style.setProperty('--px',mx*depth+'px');
+c.style.setProperty('--py',my*depth+'px');
+});
+const ring=scene3d.querySelector('.ring3d');
+if(ring)ring.style.filter=`drop-shadow(${mx*12}px ${my*12}px 20px rgba(200,169,110,0.15))`;
+const pyr=scene3d.querySelector('.pyramid3d');
+if(pyr)pyr.style.filter=`drop-shadow(${mx*-10}px ${my*-10}px 15px rgba(200,169,110,0.12))`;
+requestAnimationFrame(parallax);
+})();
+
+/* ===== CLICK RIPPLE ===== */
+document.addEventListener('click',e=>{
+const rip=document.createElement('div');
+rip.style.cssText=`position:fixed;left:${e.clientX}px;top:${e.clientY}px;width:0;height:0;border-radius:50%;border:2px solid rgba(200,169,110,0.4);transform:translate(-50%,-50%);pointer-events:none;z-index:9999;transition:all .8s cubic-bezier(.16,1,.3,1)`;
+document.body.appendChild(rip);
+requestAnimationFrame(()=>{rip.style.width='120px';rip.style.height='120px';rip.style.opacity='0'});
+setTimeout(()=>rip.remove(),800);
+});
+
+/* ===== CURSOR GLOW ===== */
+const cursorGlow=document.createElement('div');
+cursorGlow.style.cssText=`position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);transition:left .15s ease-out,top .15s ease-out`;
+document.body.appendChild(cursorGlow);
+document.addEventListener('mousemove',e=>{cursorGlow.style.left=e.clientX+'px';cursorGlow.style.top=e.clientY+'px'});
+
+/* ===== CARD HOVER RIPPLE ===== */
 document.querySelectorAll('.scard,.rcard,.tkcard,.glass').forEach(card=>{
 card.addEventListener('mouseenter',e=>{
 const rect=card.getBoundingClientRect();
 const x=e.clientX-rect.left;const y=e.clientY-rect.top;
-const rip=document.createElement('div');
-rip.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:0;height:0;border-radius:50%;background:radial-gradient(circle,rgba(212,168,83,0.08) 0%,transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:0;transition:all .6s ease`;
-card.style.position='relative';card.appendChild(rip);
-requestAnimationFrame(()=>{rip.style.width='300px';rip.style.height='300px';rip.style.opacity='0'});
-setTimeout(()=>rip.remove(),600);
+const ripple=document.createElement('div');
+ripple.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:0;height:0;border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,0.1) 0%,transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:0;transition:all .6s ease`;
+card.style.position='relative';
+card.appendChild(ripple);
+requestAnimationFrame(()=>{ripple.style.width='300px';ripple.style.height='300px';ripple.style.opacity='0'});
+setTimeout(()=>ripple.remove(),600);
 });
 });
 
-/* ===== COUNTER PULSE ===== */
+/* ===== SLIDE COUNTER PULSE on change ===== */
 const counterEl=document.getElementById('counter');
-const origUpdate=updateUI;
+const origUpdateUI=updateUI;
 updateUI=function(){
-origUpdate();
-counterEl.style.transform='scale(1.2)';
+origUpdateUI();
+counterEl.style.transform='scale(1.3)';
 counterEl.style.color='var(--gold)';
-setTimeout(()=>{counterEl.style.transform='scale(1)';counterEl.style.color=''},350);
+setTimeout(()=>{counterEl.style.transform='scale(1)';counterEl.style.color=''},300);
 };
-counterEl.style.transition='transform .35s cubic-bezier(.34,1.56,.64,1),color .35s';
+counterEl.style.transition='transform .3s cubic-bezier(.34,1.56,.64,1),color .3s';
 
 updateUI();
 </script>
